@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
-import { useSocket } from "./context/SocketContext";
+import Rooms from "./Rooms";
 import SelectUsername from "./components/SelectUsername";
+import { useSocket } from "./context/SocketContext";
 
 function App() {
   const { socket } = useSocket();
   const [messages, setMessages] = useState<string[]>([]);
   const [usernameAlreadySelected, setUsernameAlreadySelected] = useState(false);
-
 
   useEffect(() => {
     if (!socket) return;
@@ -35,8 +35,7 @@ function App() {
       socket.auth = { username };
       socket.connect();
     }
-  };            
-  
+  };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -51,24 +50,23 @@ function App() {
 
   return (
     <>
-      {
-        !usernameAlreadySelected ? (
-          <SelectUsername onInput={onUsernameSelection} />
-        ) : (
-          <>
-            <div>Chat?</div>
-            <ul>
-              {messages.map((message, index) => (
-                <li key={index}>{message}</li>
-              ))}
-            </ul>
-            <form onSubmit={handleSubmit}>
-              <input type="text" name="message" />
-              <button type="submit">Send</button>
-            </form>
-          </>
-        )
-      }
+      {!usernameAlreadySelected ? (
+        <SelectUsername onInput={onUsernameSelection} />
+      ) : (
+        <>
+          <div>Chat?</div>
+          <ul>
+            {messages.map((message, index) => (
+              <li key={index}>{message}</li>
+            ))}
+          </ul>
+          <form onSubmit={handleSubmit}>
+            <input type="text" name="message" />
+            <button type="submit">Send</button>
+          </form>
+          <Rooms />
+        </>
+      )}
     </>
   );
 }
