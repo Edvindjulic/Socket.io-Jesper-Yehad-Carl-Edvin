@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
+import Rooms from "./Rooms";
 import { useSocket } from "./context/SocketContext";
 
 function App() {
@@ -49,6 +50,7 @@ function App() {
         <input type="text" name="message" />
         <button type="submit">Send</button>
       </form>
+      <Rooms />
     </>
   );
 }

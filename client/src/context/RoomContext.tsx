@@ -12,7 +12,7 @@ export const useRoom = () => useContext(RoomContext);
 
 function SocketProvier({ children }: PropsWithChildren) {
   const [rooms, setRooms] = useState<string[]>([]);
-  const [currentRoom, setCurrentRoom] = useState<string>("");
+  const [currentRoom, setCurrentRoom] = useState<string>("start room");
 
   return (
     <RoomContext.Provider
