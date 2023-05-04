@@ -1,7 +1,10 @@
+import { useEffect } from "react";
 import { useRoom } from "./context/RoomContext";
+import { useSocket } from "./context/SocketContext";
 
 function Rooms() {
   const { rooms, setRooms, currentRoom, setCurrentRoom } = useRoom();
+  const { socket } = useSocket();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -9,10 +12,25 @@ function Rooms() {
       "message"
     ) as HTMLInputElement;
     const roomChoice = textInput.value;
-    setRooms([...rooms, roomChoice]);
-    setCurrentRoom(roomChoice);
-
+    socket.emit("create-room", roomChoice); // emit a 'create-room' event to the server with the new room name
     textInput.value = "";
+  };
+
+  useEffect(() => {
+    // set up an event listener to receive the list of rooms from the server
+    socket.on("allRooms", (allRooms: string[]) => {
+      setRooms(allRooms);
+    });
+
+    // clean up the event listener when the component unmounts
+    return () => {
+      socket.off("allRooms");
+    };
+  }, [socket]);
+
+  const handleJoinRoom = (roomName: string) => {
+    socket.emit("join-room", roomName); // Emit a 'join-room' event to the server with the room name
+    setCurrentRoom(roomName); // Set the current room in the component state
   };
 
   return (
@@ -29,7 +47,7 @@ function Rooms() {
       <ul>
         {rooms.map((room, index) => (
           <li key={index}>
-            <button onClick={() => setCurrentRoom(room)}>{room}</button>
+            <button onClick={() => handleJoinRoom(room)}>{room}</button>
           </li>
         ))}
       </ul>

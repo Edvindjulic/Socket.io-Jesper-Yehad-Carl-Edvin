@@ -7,6 +7,7 @@ export interface ClientToServerEvents {
   history: (messages: string[]) => void;
   join?: (room: string) => void;
   leave?: (room: string) => void;
+  allRooms: (rooms: string[]) => void;
 }
 
 export interface InterServerEvents {
