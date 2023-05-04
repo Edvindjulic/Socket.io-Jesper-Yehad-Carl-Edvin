@@ -1,10 +1,10 @@
 import { Server } from "socket.io";
 import type {
-  ServerClientToServerEvents,
-  ServerServerToClientEvents,
+  ClientToServerEvents,
+  ServerToClientEvents,
 } from "./communication";
 
-const io = new Server<ServerClientToServerEvents, ServerServerToClientEvents>();
+const io = new Server<ServerToClientEvents, ClientToServerEvents>();
 
 const allMessages: string[] = [];
 
