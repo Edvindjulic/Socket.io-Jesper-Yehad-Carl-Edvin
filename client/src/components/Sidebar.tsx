@@ -17,7 +17,7 @@ export default function Sidebar() {
             boxSizing: "border-box",
           },
           "& .MuiDrawer-paperAnchorLeft": {
-            borderRight: "none",
+            borderRight: "1px solid #7D99B4",
           },
         }}
         variant="permanent"

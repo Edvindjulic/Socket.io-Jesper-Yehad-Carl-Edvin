@@ -60,12 +60,15 @@ function Rooms() {
         sx={{
           textAlign: "center",
           padding: "1rem",
-          backgroundColor: "#CADDF0",
+          backgroundColor: "white",
         }}
       >
         Rooms
       </Typography>
-      <Typography variant="h6" sx={{textAlign: "center"}}>Current room is {currentRoom}</Typography>
+      <Divider sx={{
+        backgroundColor: "#7D99B4"
+      }} />
+      <Typography variant="h6" sx={{textAlign: "center", marginTop: "1rem"}}>Current room is {currentRoom}</Typography>
       <Typography variant="body1" sx={{textAlign: "center"}}>Detta är de rum som finns:</Typography>
       <List>
         {rooms.map((room, index) => (
@@ -103,7 +106,13 @@ function Rooms() {
             name="message"
             sx={{ mb: 1 }}
           />
-          <Button type="submit" variant="contained">
+          <Button type="submit" variant="contained" sx={{
+            width: "100%",
+            backgroundColor: "#57B49F",
+            "&:hover": {
+              backgroundColor: "#479F8B",
+            },
+          }}>
             Create new room
           </Button>
         </Box>
