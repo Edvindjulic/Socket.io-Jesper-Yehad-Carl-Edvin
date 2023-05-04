@@ -28,7 +28,9 @@ function Rooms() {
       <h4>Detta är de rum som finns:</h4>
       <ul>
         {rooms.map((room, index) => (
-          <li key={index}>{room}</li>
+          <li key={index}>
+            <button onClick={() => setCurrentRoom(room)}>{room}</button>
+          </li>
         ))}
       </ul>
     </div>
