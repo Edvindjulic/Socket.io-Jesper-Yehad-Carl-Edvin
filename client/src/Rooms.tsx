@@ -6,31 +6,39 @@ function Rooms() {
   const { rooms, setRooms, currentRoom, setCurrentRoom } = useRoom();
   const { socket } = useSocket();
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const textInput = event.currentTarget.elements.namedItem(
-      "message"
-    ) as HTMLInputElement;
-    const roomChoice = textInput.value;
-    socket.emit("create-room", roomChoice); // emit a 'create-room' event to the server with the new room name
-    textInput.value = "";
-  };
-
   useEffect(() => {
-    // set up an event listener to receive the list of rooms from the server
-    socket.on("allRooms", (allRooms: string[]) => {
-      setRooms(allRooms);
-    });
+    if (!socket) return;
 
-    // clean up the event listener when the component unmounts
+    const handleAllRooms = (allRooms: string[]) => {
+      updateRooms(allRooms);
+    };
+
+    socket.on("allRooms", handleAllRooms);
+
     return () => {
-      socket.off("allRooms");
+      socket.off("allRooms", handleAllRooms);
     };
   }, [socket]);
 
-  const handleJoinRoom = (roomName: string) => {
-    socket.emit("join-room", roomName); // Emit a 'join-room' event to the server with the room name
-    setCurrentRoom(roomName); // Set the current room in the component state
+  const updateRooms = (allRooms: string[]) => {
+    setRooms(allRooms);
+  };
+
+  const handleJoinRoom = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const roomName = e.currentTarget.message.value;
+
+    if (roomName) {
+      if (!rooms.includes(roomName)) {
+        // Create the room if it doesn't exist
+        socket.emit("create-room", roomName);
+      } else {
+        // Join the room if it exists
+        socket.emit("join-room", roomName);
+      }
+      setCurrentRoom(roomName);
+    }
+    e.currentTarget.message.value = "";
   };
 
   return (
@@ -38,17 +46,15 @@ function Rooms() {
       <h1>Rooms</h1>
       <h3>Current room is {currentRoom}</h3>
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleJoinRoom}>
         <label>Skriv vilket rum du vill vara i</label> <br />
         <input type="text" name="message" />
-        <button type="submit">Send</button>
+        <button type="submit">Join Room</button>
       </form>
       <h4>Detta är de rum som finns:</h4>
       <ul>
         {rooms.map((room, index) => (
-          <li key={index}>
-            <button onClick={() => handleJoinRoom(room)}>{room}</button>
-          </li>
+          <li key={index}>{room}</li>
         ))}
       </ul>
     </div>

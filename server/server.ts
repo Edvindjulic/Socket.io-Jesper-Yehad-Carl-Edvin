@@ -22,13 +22,11 @@ io.use((socket, next) => {
 });
 
 io.on("connection", (socket: any) => {
-  console.log("a user connected");
-
   const username = socket.username;
 
+  console.log(`${username} has connected to the server`);
   socket.emit("history", allMessages);
 
-  // Emit the list of all rooms to the client when they connect
   socket.emit("allRooms", allRooms);
 
   socket.on("message", (message: string) => {
@@ -38,6 +36,8 @@ io.on("connection", (socket: any) => {
   });
 
   socket.on("create-room", (roomName: string) => {
+    console.log(`User ${username} created room ${roomName}`);
+
     if (!allRooms.includes(roomName)) {
       allRooms.push(roomName);
       io.emit("allRooms", allRooms);
@@ -46,11 +46,7 @@ io.on("connection", (socket: any) => {
 
   socket.on("join-room", (roomName: string) => {
     console.log(`User ${username} joined room ${roomName}`);
-
-    if (allRooms.includes(roomName)) {
-      allRooms.splice(allRooms.indexOf(roomName), 1);
-      io.emit("allRooms", allRooms);
-    }
+    console.log(allRooms);
   });
 });
 
