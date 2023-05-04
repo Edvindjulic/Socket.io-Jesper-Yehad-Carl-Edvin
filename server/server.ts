@@ -7,31 +7,48 @@ import type {
 const io = new Server<ServerToClientEvents, ClientToServerEvents>();
 
 const allMessages: string[] = [];
+const allRooms: string[] = ["Room 1", "Room 2", "Room 3"];
 
 // Middleware
 io.use((socket, next) => {
   const username = socket.handshake.auth.username;
-  if (typeof username === "string") {    // Next -> Error om username inte är en string
+  if (typeof username === "string") {
+    // Next -> Error om username inte är en string
     (socket as any).username = username;
-    next();                               // Next -> Skickar vidare till  "connection"
+    next(); // Next -> Skickar vidare till  "connection"
   } else {
-    next(new Error("invalid username")); 
+    next(new Error("invalid username"));
   }
 });
 
 io.on("connection", (socket: any) => {
-  console.log("a user connected");
-  const username = socket.username; // username som checkades i io.use
+  const username = socket.username;
 
+  console.log(`${username} has connected to the server`);
   socket.emit("history", allMessages);
 
+  socket.emit("allRooms", allRooms);
+
   socket.on("message", (message: string) => {
-    const fullMessage = `${username}: ${message}`; // username + meddelande
+    const fullMessage = `${username}: ${message}`;
     allMessages.push(fullMessage);
     io.emit("message", fullMessage);
   });
-});
 
+  socket.on("create-room", (roomName: string) => {
+    console.log(`User ${username} created room ${roomName}`);
+
+    if (!allRooms.includes(roomName)) {
+      allRooms.push(roomName);
+      io.emit("allRooms", allRooms);
+    }
+  });
+
+  socket.on("join-room", (roomName: string) => {
+    console.log(`User ${username} joined room ${roomName}`);
+    console.log(allRooms);
+  });
+});
 
 io.listen(3000);
 console.log("listening on port 3000");
