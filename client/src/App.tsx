@@ -1,7 +1,8 @@
+import { Box } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import "./App.css";
-import Rooms from "./Rooms";
 import SelectUsername from "./components/SelectUsername";
+import Sidebar from "./components/Sidebar";
 import { useSocket } from "./context/SocketContext";
 
 function App() {
@@ -53,19 +54,32 @@ function App() {
       {!usernameAlreadySelected ? (
         <SelectUsername onInput={onUsernameSelection} />
       ) : (
-        <>
-          <div>Chat?</div>
-          <ul>
-            {messages.map((message, index) => (
-              <li key={index}>{message}</li>
-            ))}
-          </ul>
-          <form onSubmit={handleSubmit}>
-            <input type="text" name="message" />
-            <button type="submit">Send</button>
-          </form>
-          <Rooms />
-        </>
+        <Box sx={{
+          height: "100vh",
+          background:
+          "linear-gradient(180deg, rgba(202, 221, 240, 1) 0%, rgba(230, 237, 248, 0) 100%)",
+        }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <Box>Chat?</Box>
+            <ul>
+              {messages.map((message, index) => (
+                <li key={index}>{message}</li>
+              ))}
+            </ul>
+            <form onSubmit={handleSubmit}>
+              <input type="text" name="message" />
+              <button type="submit">Send</button>
+            </form>
+          </Box>
+
+          <Sidebar />
+        </Box>
       )}
     </>
   );
