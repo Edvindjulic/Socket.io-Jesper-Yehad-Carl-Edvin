@@ -34,7 +34,9 @@ function SocketProvider({ children }: PropsWithChildren) {
   const [listOfRooms, setListOfRooms] = useState<string[]>([]);
 
   const joinRoom = (room: string) => {
+    socket.emit("leave", currentRoom);
     socket.emit("join", room, () => {
+      console.log("Received acknowledgement from server");
       setCurrentRoom(room);
     });
   };
@@ -43,6 +45,9 @@ function SocketProvider({ children }: PropsWithChildren) {
     if (!currentRoom) throw Error("Not in a room");
     socket.emit("message", currentRoom, message);
   };
+  useEffect(() => {
+    console.log("Updated current room:", currentRoom);
+  }, [currentRoom]);
 
   useEffect(() => {
     function connect() {

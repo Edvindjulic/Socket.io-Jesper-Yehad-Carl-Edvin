@@ -6,8 +6,9 @@ import Sidebar from "./components/Sidebar";
 import { useSocket } from "./context/SocketContext";
 
 function App() {
-  const { socket, messages } = useSocket();
   const [usernameAlreadySelected, setUsernameAlreadySelected] = useState(false);
+  const [message, setMessage] = useState("");
+  const { socket, sendMessage, messages } = useSocket();
 
   const onUsernameSelection = (username: string) => {
     setUsernameAlreadySelected(true);
@@ -17,15 +18,10 @@ function App() {
     }
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const messageInput = event.currentTarget.elements.namedItem(
-      "message"
-    ) as HTMLInputElement;
-    const message = messageInput.value;
-    socket.emit("message", message);
-    console.log("Sent message:", message);
-    messageInput.value = "";
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    sendMessage(message);
+    setMessage("");
   };
 
   return (
@@ -49,14 +45,20 @@ function App() {
           >
             <Box>Chat?</Box>
             <ul>
-              {messages.map((message, index) => (
-                <li key={index}>
+              {messages.map((message, i) => (
+                <li key={i}>
                   {message.name}: {message.message}
                 </li>
               ))}
             </ul>
             <form onSubmit={handleSubmit}>
-              <input type="text" name="message" />
+              <input
+                name="message"
+                placeholder="Write a message..."
+                type="text"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+              />
               <button type="submit">Send</button>
             </form>
           </Box>

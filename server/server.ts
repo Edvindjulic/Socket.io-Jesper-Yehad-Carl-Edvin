@@ -36,16 +36,25 @@ io.on("connection", (socket: any) => {
     console.log(room, socket.username, message);
   });
 
-  socket.on("join", (room: string, name: string, ack?: () => void) => {
-    socket.username = name; // Set the username as a property of the socket
+  socket.on("join", (room: string, ack?: () => void) => {
+    console.log("Received join event from client");
+    console.log("Ack function:", ack);
+
     socket.join(room);
     console.log(socket.rooms);
     if (ack) {
+      console.log("Acknowledging client");
+
       ack();
     }
     // When a user joins a room, send an updated list of rooms to everyone
     io.emit("rooms", getRooms());
     console.log(getRooms());
+  });
+
+  socket.on("leave", (room: string) => {
+    socket.leave(room);
+    io.emit("rooms", getRooms());
   });
 
   // When a new user joins, send them the list of rooms
