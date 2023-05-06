@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
 import SelectUsername from "./components/SelectUsername";
 import Sidebar from "./components/Sidebar";
@@ -8,7 +8,14 @@ import { useSocket } from "./context/SocketContext";
 function App() {
   const [usernameAlreadySelected, setUsernameAlreadySelected] = useState(false);
   const [message, setMessage] = useState("");
-  const { socket, sendMessage, messages } = useSocket();
+  const { socket, sendMessage, messages, currentRoom, setMessages } =
+    useSocket();
+
+  useEffect(() => {
+    if (currentRoom) {
+      setMessages([]);
+    }
+  }, [currentRoom]);
 
   const onUsernameSelection = (username: string) => {
     setUsernameAlreadySelected(true);

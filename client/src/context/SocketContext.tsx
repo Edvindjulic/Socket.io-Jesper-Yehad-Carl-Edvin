@@ -17,6 +17,7 @@ interface ContextValues {
   sendMessage: (message: string) => void;
   currentRoom?: string;
   messages: Message[];
+  setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
   socket: Socket;
   listOfRooms: string[];
 }
@@ -86,6 +87,7 @@ function SocketProvider({ children }: PropsWithChildren) {
         sendMessage,
         currentRoom,
         listOfRooms,
+        setMessages,
       }}
     >
       {children}
