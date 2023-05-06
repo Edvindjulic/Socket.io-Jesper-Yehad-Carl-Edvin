@@ -1,13 +1,18 @@
 import { Server } from "socket.io";
 import type {
   ClientToServerEvents,
+  InterServerEvents,
   ServerToClientEvents,
+  SocketData,
 } from "./communication";
 
-const io = new Server<ServerToClientEvents, ClientToServerEvents>();
-
+const io = new Server<
+  ClientToServerEvents,
+  ServerToClientEvents,
+  InterServerEvents,
+  SocketData
+>();
 const allMessages: string[] = [];
-const allRooms: string[] = ["Room 1", "Room 2", "Room 3"];
 
 // Middleware
 io.use((socket, next) => {
@@ -25,30 +30,40 @@ io.on("connection", (socket: any) => {
   const username = socket.username;
 
   console.log(`${username} has connected to the server`);
-  socket.emit("history", allMessages);
 
-  socket.emit("allRooms", allRooms);
-
-  socket.on("message", (message: string) => {
-    const fullMessage = `${username}: ${message}`;
-    allMessages.push(fullMessage);
-    io.emit("message", fullMessage);
+  socket.on("message", (room: string, message: string) => {
+    io.to(room).emit("message", socket.username, message);
+    console.log(room, socket.username, message);
   });
 
-  socket.on("create-room", (roomName: string) => {
-    console.log(`User ${username} created room ${roomName}`);
-
-    if (!allRooms.includes(roomName)) {
-      allRooms.push(roomName);
-      io.emit("allRooms", allRooms);
+  socket.on("join", (room: string, name: string, ack?: () => void) => {
+    socket.username = name; // Set the username as a property of the socket
+    socket.join(room);
+    console.log(socket.rooms);
+    if (ack) {
+      ack();
     }
+    // When a user joins a room, send an updated list of rooms to everyone
+    io.emit("rooms", getRooms());
+    console.log(getRooms());
   });
 
-  socket.on("join-room", (roomName: string) => {
-    console.log(`User ${username} joined room ${roomName}`);
-    console.log(allRooms);
-  });
+  // When a new user joins, send them the list of rooms
+  socket.emit("rooms", getRooms());
 });
 
+function getRooms() {
+  const { rooms } = io.sockets.adapter;
+  const roomsFound: string[] = [];
+
+  for (const [name, setOfSocketIds] of rooms) {
+    // An actual real room that we created
+    if (!setOfSocketIds.has(name)) {
+      roomsFound.push(name);
+    }
+  }
+  return roomsFound;
+}
+
 io.listen(3000);
-console.log("listening on port 3000");
+console;

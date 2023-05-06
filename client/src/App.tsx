@@ -1,34 +1,13 @@
 import { Box } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./App.css";
 import SelectUsername from "./components/SelectUsername";
 import Sidebar from "./components/Sidebar";
 import { useSocket } from "./context/SocketContext";
 
 function App() {
-  const { socket } = useSocket();
-  const [messages, setMessages] = useState<string[]>([]);
+  const { socket, messages } = useSocket();
   const [usernameAlreadySelected, setUsernameAlreadySelected] = useState(false);
-
-  useEffect(() => {
-    if (!socket) return;
-
-    const handleHistory = (history: string[]) => {
-      setMessages(history);
-    };
-
-    const handleMessage = (message: string) => {
-      setMessages((prevMessages) => [...prevMessages, message]);
-    };
-
-    socket.on("history", handleHistory);
-    socket.on("message", handleMessage);
-
-    return () => {
-      socket.off("history", handleHistory);
-      socket.off("message", handleMessage);
-    };
-  }, [socket]);
 
   const onUsernameSelection = (username: string) => {
     setUsernameAlreadySelected(true);
@@ -54,11 +33,13 @@ function App() {
       {!usernameAlreadySelected ? (
         <SelectUsername onInput={onUsernameSelection} />
       ) : (
-        <Box sx={{
-          height: "100vh",
-          background:
-          "linear-gradient(180deg, rgba(202, 221, 240, 1) 0%, rgba(230, 237, 248, 0) 100%)",
-        }}>
+        <Box
+          sx={{
+            height: "100vh",
+            background:
+              "linear-gradient(180deg, rgba(202, 221, 240, 1) 0%, rgba(230, 237, 248, 0) 100%)",
+          }}
+        >
           <Box
             sx={{
               display: "flex",
@@ -69,7 +50,9 @@ function App() {
             <Box>Chat?</Box>
             <ul>
               {messages.map((message, index) => (
-                <li key={index}>{message}</li>
+                <li key={index}>
+                  {message.name}: {message.message}
+                </li>
               ))}
             </ul>
             <form onSubmit={handleSubmit}>
