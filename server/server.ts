@@ -50,6 +50,14 @@ io.on("connection", (socket: any) => {
 
   // When a new user joins, send them the list of rooms
   socket.emit("rooms", getRooms());
+
+  socket.on("disconnect", () => {
+    console.log(`${username} has disconnected from the server`);
+
+    // When a user disconnects from a room, send an updated list of rooms to everyone
+    io.emit("rooms", getRooms());
+    console.log(getRooms());
+  });
 });
 
 function getRooms() {
