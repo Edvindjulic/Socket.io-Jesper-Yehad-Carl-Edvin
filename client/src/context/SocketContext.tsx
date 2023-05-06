@@ -18,6 +18,7 @@ interface ContextValues {
   currentRoom?: string;
   messages: Message[];
   socket: Socket;
+  listOfRooms: string[];
 }
 
 const SocketContext = createContext<ContextValues>(null as any);
@@ -30,6 +31,7 @@ function SocketProvider({ children }: PropsWithChildren) {
   );
   const [messages, setMessages] = useState<Message[]>([]);
   const [currentRoom, setCurrentRoom] = useState<string>("Default");
+  const [listOfRooms, setListOfRooms] = useState<string[]>([]);
 
   const joinRoom = (room: string) => {
     socket.emit("join", room, () => {
@@ -54,6 +56,7 @@ function SocketProvider({ children }: PropsWithChildren) {
     }
     function rooms(rooms: string[]) {
       console.log(rooms);
+      setListOfRooms(rooms);
     }
 
     socket.on("connect", connect);
@@ -77,6 +80,7 @@ function SocketProvider({ children }: PropsWithChildren) {
         messages,
         sendMessage,
         currentRoom,
+        listOfRooms,
       }}
     >
       {children}

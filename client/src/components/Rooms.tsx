@@ -1,8 +1,18 @@
-import { Box, Button, Divider, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Divider,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useSocket } from "../context/SocketContext";
 
 function Rooms() {
-  const { currentRoom, joinRoom } = useSocket();
+  const { currentRoom, joinRoom, listOfRooms } = useSocket();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -36,16 +46,16 @@ function Rooms() {
       <Typography variant="body1" sx={{ textAlign: "center" }}>
         Detta är de rum som finns:
       </Typography>
-      {/* <List>
-        {rooms.map((room, index) => (
+      <List>
+        {listOfRooms.map((room, index) => (
           <ListItem key={index}>
             <ListItemIcon>
-              <ChatBubbleOutlineOutlinedIcon />
+              {/* <ChatBubbleOutlineOutlinedIcon /> */}
             </ListItemIcon>
             <ListItemText primary={room} />
           </ListItem>
         ))}
-      </List> */}
+      </List>
       <Divider
         sx={{
           width: "80%",
