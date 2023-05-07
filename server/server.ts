@@ -12,7 +12,8 @@ const io = new Server<
   InterServerEvents,
   SocketData
 >();
-const allMessages: string[] = [];
+const allMessages: { [room: string]: { username: string; message: string }[] } =
+  {};
 
 // Middleware
 io.use((socket, next) => {
@@ -34,6 +35,11 @@ io.on("connection", (socket: any) => {
   socket.on("message", (room: string, message: string) => {
     io.to(room).emit("message", socket.username, message);
     console.log(room, socket.username, message);
+    if (!allMessages[room]) {
+      allMessages[room] = [];
+    }
+    allMessages[room].push({ username: socket.username, message });
+    console.log(allMessages);
   });
 
   socket.on("join", (room: string, ack?: () => void) => {

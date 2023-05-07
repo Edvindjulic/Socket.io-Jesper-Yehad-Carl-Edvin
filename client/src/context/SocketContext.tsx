@@ -64,17 +64,22 @@ function SocketProvider({ children }: PropsWithChildren) {
       console.log(rooms);
       setListOfRooms(rooms);
     }
+    function allMessages(allMessages: { [room: string]: Message[] }) {
+      console.log("this is message history:", allMessages);
+    }
 
     socket.on("connect", connect);
     socket.on("disconnect", disconnect);
     socket.on("message", message);
     socket.on("rooms", rooms);
+    socket.on("allMessages", allMessages);
 
     return () => {
       socket.off("connect", connect);
       socket.off("disconnect", disconnect);
       socket.off("message", message);
       socket.off("rooms", rooms);
+      socket.off("allMessages", allMessages);
     };
   }, []);
 

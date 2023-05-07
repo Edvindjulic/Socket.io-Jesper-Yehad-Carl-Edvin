@@ -1,6 +1,7 @@
 export interface ServerToClientEvents {
   message: (name: string, message: string) => void;
   rooms: (rooms: string[]) => void;
+  allMessages: (allMessages: { [room: string]: Message[] }) => void;
 }
 
 export interface ClientToServerEvents {
