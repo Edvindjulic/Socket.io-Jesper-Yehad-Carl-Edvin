@@ -7,6 +7,7 @@ export interface ClientToServerEvents {
   history: (messages: string[]) => void;
   join?: (room: string) => void;
   leave?: (room: string) => void;
+  userLeft?: (username: string) => void;
   allRooms: (rooms: string[]) => void;
 }
 
