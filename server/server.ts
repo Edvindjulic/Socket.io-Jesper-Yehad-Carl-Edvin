@@ -58,29 +58,21 @@ io.on("connection", (socket: any) => {
     console.log(getRooms());
   });
 
-  socket.on("leave", (room: string) => {
-    socket.leave(room);
-    io.emit("rooms", getRooms());
-  });
-
   // When a new user joins, send them the list of rooms
   socket.emit("rooms", getRooms());
 
   socket.on("disconnect", () => {
     console.log(`${username} has disconnected from the server`);
-
-    // When a user disconnects from a room, send an updated list of rooms to everyone
+    // io.emit("leave", `${username} has disconnected from the server`);
     io.emit("rooms", getRooms());
     console.log(getRooms());
   });
-  socket.on("disconnect", () => {
-    console.log(`${username} has disconnected from the server`);
-    io.emit("leave", `${username} has disconnected from the server`);
-  });
 
   socket.on("leave", (room: string) => {
+    socket.leave(room);
+    io.emit("rooms", getRooms());
     console.log(`${username} has left the room ${room}`);
-    io.to(room).emit("userLeft", `${username} has left the room ${room}`);
+    // io.to(room).emit("userLeft", `${username} has left the room ${room}`);
   });
 });
 
