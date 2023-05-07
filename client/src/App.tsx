@@ -1,15 +1,14 @@
 import { Box } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
+import ChatBox from "./components/ChatBox"; // Import ChatBox component
 import SelectUsername from "./components/SelectUsername";
 import Sidebar from "./components/Sidebar";
 import { useSocket } from "./context/SocketContext";
 
 function App() {
   const [usernameAlreadySelected, setUsernameAlreadySelected] = useState(false);
-  const [message, setMessage] = useState("");
-  const { socket, sendMessage, messages, currentRoom, setMessages } =
-    useSocket();
+  const { socket, setMessages, currentRoom } = useSocket();
 
   useEffect(() => {
     if (currentRoom) {
@@ -25,12 +24,6 @@ function App() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    sendMessage(message);
-    setMessage("");
-  };
-
   return (
     <>
       {!usernameAlreadySelected ? (
@@ -43,33 +36,7 @@ function App() {
               "linear-gradient(180deg, rgba(202, 221, 240, 1) 0%, rgba(230, 237, 248, 0) 100%)",
           }}
         >
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <Box>Chat?</Box>
-            <ul>
-              {messages.map((message, i) => (
-                <li key={i}>
-                  {message.name}: {message.message}
-                </li>
-              ))}
-            </ul>
-            <form onSubmit={handleSubmit}>
-              <input
-                name="message"
-                placeholder="Write a message..."
-                type="text"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-              />
-              <button type="submit">Send</button>
-            </form>
-          </Box>
-
+          <ChatBox /> {/* Add the ChatBox component */}
           <Sidebar />
         </Box>
       )}
