@@ -1,5 +1,12 @@
-import { Box, Button, TextField, Typography, List, ListItem } from "@mui/material";
-import React, { useState, useRef, useEffect } from "react";
+import {
+  Box,
+  Button,
+  List,
+  ListItem,
+  TextField,
+  Typography,
+} from "@mui/material";
+import React, { useEffect, useRef, useState } from "react";
 import { useSocket } from "../context/SocketContext";
 
 const drawerWidth = "20vw";
@@ -28,61 +35,81 @@ export default function ChatBox() {
         flexDirection: "column",
         alignItems: "center",
         marginLeft: drawerWidth,
-        backgroundColor: "lightgreen",
+        position: "relative",
       }}
     >
-      <Typography variant="h6">Chat in {currentRoom} room</Typography>
+      <Typography
+        variant="h6"
+        sx={{
+          width: "60vw",
+          padding: "0.5rem",
+          textAlign: "center",
+          backgroundColor: "#7D99B4",
+        }}
+      >
+        Chat in <span style={{ fontWeight: "bold" }}>{currentRoom}</span> room
+      </Typography>
       <Box
         sx={{
           width: "60vw",
           height: "80vh",
-          backgroundColor: "lightblue",
           marginBottom: "1rem",
           overflowY: "auto",
-        }}
-      >
-        <List>
-          {messages.map((message, i) => (
-            <ListItem key={i} ref={i === messages.length - 1 ? latestMessageRef : null}>
-              {message.name}: {message.message}
-            </ListItem>
-          ))}
-        </List>
-      </Box>
-      <Box
-        component="form"
-        onSubmit={handleSubmit}
-        sx={{
+          border: "1px solid #7D99B4",
           display: "flex",
-          flexDirection: "row",
-          width: "100%",
-          justifyContent: "center",
-          alignItems: "center",
-          marginBottom: "1rem",
+          flexDirection: "column",
+          justifyContent: "space-between",
         }}
       >
-        <TextField
-          name="message"
-          label="Write a message..."
-          type="text"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          variant="outlined"
-          size="small"
+        <Box sx={{ overflowY: "auto" }}>
+          <List>
+            {messages.map((message, i) => (
+              <ListItem
+                key={i}
+                ref={i === messages.length - 1 ? latestMessageRef : null}
+              >
+                {message.name}: {message.message}
+              </ListItem>
+            ))}
+          </List>
+        </Box>
+        <Box
+          component="form"
+          onSubmit={handleSubmit}
           sx={{
-            width: "50%",
-          }}
-        />
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          sx={{
-            width: "10%",
+            display: "flex",
+            flexDirection: "row",
+            width: "100%",
+            justifyContent: "center",
+            alignItems: "center",
+            marginBottom: "1rem",
           }}
         >
-          Send
-        </Button>
+          <TextField
+            name="message"
+            label="Write a message..."
+            type="text"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            variant="outlined"
+            size="small"
+            sx={{
+              width: "50%",
+              backgroundColor: "white",
+            }}
+          />
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            sx={{
+              width: "10%",
+              marginLeft: "1rem",
+            }}
+          >
+            Send
+          </Button>
+        </Box>
       </Box>
     </Box>
   );
