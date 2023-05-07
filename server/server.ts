@@ -73,6 +73,15 @@ io.on("connection", (socket: any) => {
     io.emit("rooms", getRooms());
     console.log(getRooms());
   });
+  socket.on("disconnect", () => {
+    console.log(`${username} has disconnected from the server`);
+    io.emit("leave", `${username} has disconnected from the server`);
+  });
+
+  socket.on("leave", (room: string) => {
+    console.log(`${username} has left the room ${room}`);
+    io.to(room).emit("userLeft", `${username} has left the room ${room}`);
+  });
 });
 
 function getRooms() {
