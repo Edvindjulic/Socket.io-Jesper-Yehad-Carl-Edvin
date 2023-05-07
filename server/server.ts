@@ -1,13 +1,19 @@
 import { Server } from "socket.io";
 import type {
   ClientToServerEvents,
+  InterServerEvents,
   ServerToClientEvents,
+  SocketData,
 } from "./communication";
 
-const io = new Server<ServerToClientEvents, ClientToServerEvents>();
-
-const allMessages: string[] = [];
-const allRooms: string[] = ["Room 1", "Room 2", "Room 3"];
+const io = new Server<
+  ClientToServerEvents,
+  ServerToClientEvents,
+  InterServerEvents,
+  SocketData
+>();
+const allMessages: { [room: string]: { username: string; message: string }[] } =
+  {};
 
 // Middleware
 io.use((socket, next) => {
@@ -25,39 +31,63 @@ io.on("connection", (socket: any) => {
   const username = socket.username;
 
   console.log(`${username} has connected to the server`);
-  socket.emit("history", allMessages);
 
-  socket.emit("allRooms", allRooms);
-
-  socket.on("message", (message: string) => {
-    const fullMessage = `${username}: ${message}`;
-    allMessages.push(fullMessage);
-    io.emit("message", fullMessage);
-  });
-
-  socket.on("create-room", (roomName: string) => {
-    console.log(`User ${username} created room ${roomName}`);
-
-    if (!allRooms.includes(roomName)) {
-      allRooms.push(roomName);
-      io.emit("allRooms", allRooms);
+  socket.on("message", (room: string, message: string) => {
+    io.to(room).emit("message", socket.username, message);
+    console.log(room, socket.username, message);
+    if (!allMessages[room]) {
+      allMessages[room] = [];
     }
+    allMessages[room].push({ username: socket.username, message });
+    console.log(allMessages);
   });
 
-  socket.on("join-room", (roomName: string) => {
-    console.log(`User ${username} joined room ${roomName}`);
-    console.log(allRooms);
+  socket.on("join", (room: string, ack?: () => void) => {
+    console.log("Received join event from client");
+    console.log("Ack function:", ack);
+
+    socket.join(room);
+    console.log(socket.rooms);
+    if (ack) {
+      console.log("Acknowledging client");
+
+      ack();
+    }
+    // When a user joins a room, send an updated list of rooms to everyone
+    io.emit("rooms", getRooms());
+    console.log(getRooms());
   });
+
+  // When a new user joins, send them the list of rooms
+  socket.emit("rooms", getRooms());
+
   socket.on("disconnect", () => {
     console.log(`${username} has disconnected from the server`);
-    io.emit("leave", `${username} has disconnected from the server`);
+    // io.emit("leave", `${username} has disconnected from the server`);
+    io.emit("rooms", getRooms());
+    console.log(getRooms());
   });
 
   socket.on("leave", (room: string) => {
+    socket.leave(room);
+    io.emit("rooms", getRooms());
     console.log(`${username} has left the room ${room}`);
-    io.to(room).emit("userLeft", `${username} has left the room ${room}`);
+    // io.to(room).emit("userLeft", `${username} has left the room ${room}`);
   });
 });
 
+function getRooms() {
+  const { rooms } = io.sockets.adapter;
+  const roomsFound: string[] = [];
+
+  for (const [name, setOfSocketIds] of rooms) {
+    // An actual real room that we created
+    if (!setOfSocketIds.has(name)) {
+      roomsFound.push(name);
+    }
+  }
+  return roomsFound;
+}
+
 io.listen(3000);
-console.log("listening on port 3000");
+console;
