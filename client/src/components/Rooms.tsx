@@ -53,6 +53,9 @@ function Rooms() {
               {/* <ChatBubbleOutlineOutlinedIcon /> */}
             </ListItemIcon>
             <ListItemText primary={room} />
+            <Button variant="outlined" onClick={() => joinRoom(room)}>
+              Gå med
+            </Button>
           </ListItem>
         ))}
       </List>
