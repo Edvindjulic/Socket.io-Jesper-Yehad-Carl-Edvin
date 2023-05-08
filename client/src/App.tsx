@@ -33,12 +33,12 @@ function App() {
           sx={{
             height: "100vh",
             background:
-                "linear-gradient(180deg, rgba(202, 221, 240, 1) 0%, rgba(230, 237, 248, 0) 100%)",
+              "linear-gradient(180deg, rgba(202, 221, 240, 1) 0%, rgba(230, 237, 248, 0) 100%)",
           }}
         >
           <Box
             sx={{
-              paddingTop: "2rem", // Adjust this value to change the margin-top
+              paddingTop: "2rem",
               height: "100%",
             }}
           >
@@ -52,3 +52,4 @@ function App() {
 }
 
 export default App;
+

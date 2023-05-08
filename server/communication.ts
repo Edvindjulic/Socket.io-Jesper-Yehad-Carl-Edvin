@@ -12,6 +12,7 @@ export interface ClientToServerEvents {
   leave: (room: string) => void;
   userLeft: (username: string) => void;
   allRooms: (rooms: string[]) => void;
+  typing: (room: string, isTyping: boolean) => void;
 }
 
 export interface InterServerEvents {
@@ -24,6 +25,6 @@ export interface SocketData {
 }
 
 export interface Message {
-  name: string;
+  username: string;
   message: string;
 }

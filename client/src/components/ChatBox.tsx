@@ -14,13 +14,36 @@ const drawerWidth = "20vw";
 
 export default function ChatBox() {
   const [message, setMessage] = useState("");
-  const { sendMessage, messages, currentRoom } = useSocket();
+  const [typingUsers, setTypingUsers] = useState<string[]>([]);
+  const { socket, sendMessage, messages, currentRoom, allMessageHistory } =
+    useSocket();
   const latestMessageRef = useRef<HTMLLIElement>(null);
+  const [typing, setTyping] = useState(false);
+
+  const submitMessage = () => {
+    if (message.trim()) {
+      sendMessage(message);
+      setMessage("");
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    sendMessage(message);
-    setMessage("");
+    submitMessage();
+  };
+
+  const handleKeyPress = () => {
+    if (!typing && currentRoom && message.trim()) {
+      socket.emit("typing", currentRoom, true);
+      setTyping(true);
+    }
+  };
+
+  const handleBlur = () => {
+    if (typing) {
+      socket.emit("typing", currentRoom, false);
+      setTyping(false);
+    }
   };
 
   useEffect(() => {
@@ -28,6 +51,25 @@ export default function ChatBox() {
       latestMessageRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages]);
+
+  useEffect(() => {
+    const onTyping = (username: string, isTyping: boolean) => {
+      setTypingUsers((users) => {
+        if (isTyping) {
+          return [...users, username];
+        } else {
+          return users.filter((user) => user !== username);
+        }
+      });
+      setTyping(isTyping);
+    };
+
+    socket.on("typing", onTyping);
+
+    return () => {
+      socket.off("typing", onTyping);
+    };
+  }, [socket]);
 
   return (
     <Box
@@ -59,12 +101,11 @@ export default function ChatBox() {
           border: "1px solid #7D99B4",
           display: "flex",
           flexDirection: "column",
-          justifyContent: "space-between",
         }}
       >
-        <Box sx={{ overflowY: "auto" }}>
+        <Box sx={{ flexGrow: 1, overflowY: "auto" }}>
           <List>
-            {messages.map((message, i) => (
+            {(allMessageHistory[currentRoom!] ?? []).map((message, i) => (
               <ListItem
                 key={i}
                 ref={i === messages.length - 1 ? latestMessageRef : null}
@@ -74,10 +115,25 @@ export default function ChatBox() {
                   whiteSpace: "pre-wrap",
                 }}
               >
-                {message.name}: {message.message}
+                {message.username}: {message.message}
               </ListItem>
             ))}
           </List>
+        </Box>
+        <Box sx={{ flexGrow: 0 }}>
+          {typingUsers.length > 0 && (
+            <Typography
+              sx={{
+                padding: "0.5rem",
+                backgroundColor: "#E6EEF4",
+                textAlign: "center",
+                width: "100%",
+              }}
+            >
+              {typingUsers.join(", ")} {typingUsers.length > 1 ? "are" : "is"}{" "}
+              typing...
+            </Typography>
+          )}
         </Box>
         <Box
           component="form"
@@ -101,6 +157,14 @@ export default function ChatBox() {
             type="text"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                submitMessage();
+              }
+            }}
+            onInput={handleKeyPress}
+            onBlur={handleBlur}
             variant="outlined"
             size="small"
             sx={{
@@ -126,7 +190,6 @@ export default function ChatBox() {
                 },
             }}
           />
-
           <Button
             type="submit"
             variant="contained"

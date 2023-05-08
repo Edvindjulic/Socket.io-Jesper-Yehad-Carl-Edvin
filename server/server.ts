@@ -40,6 +40,7 @@ io.on("connection", (socket: any) => {
       allMessages[room] = [];
     }
     allMessages[room].push({ username: socket.username, message });
+    io.emit("allMessages", allMessages); // Add this line
     console.log(allMessages);
   });
 
@@ -66,6 +67,7 @@ io.on("connection", (socket: any) => {
     io.emit("usersInRooms", usersInRooms);
 
     console.log(getRooms());
+    socket.emit("allMessages", { [room]: allMessages[room] });
   });
 
   // When a new user joins, send them the list of rooms
