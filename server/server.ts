@@ -110,5 +110,4 @@ function getRooms() {
   }
   return roomsFound;
 }
-
 io.listen(3000);
