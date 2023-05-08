@@ -14,7 +14,7 @@ const drawerWidth = "20vw";
 
 export default function ChatBox() {
   const [message, setMessage] = useState("");
-  const { sendMessage, messages, currentRoom } = useSocket();
+  const { sendMessage, messages, currentRoom, allMessageHistory } = useSocket();
   const latestMessageRef = useRef<HTMLLIElement>(null);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -64,7 +64,7 @@ export default function ChatBox() {
       >
         <Box sx={{ overflowY: "auto" }}>
           <List>
-            {messages.map((message, i) => (
+            {(allMessageHistory[currentRoom!] ?? []).map((message, i) => (
               <ListItem
                 key={i}
                 ref={i === messages.length - 1 ? latestMessageRef : null}
@@ -74,7 +74,7 @@ export default function ChatBox() {
                   whiteSpace: "pre-wrap",
                 }}
               >
-                {message.name}: {message.message}
+                {message.username}: {message.message}
               </ListItem>
             ))}
           </List>
