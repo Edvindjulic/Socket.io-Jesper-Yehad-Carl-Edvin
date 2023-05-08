@@ -1,11 +1,8 @@
 import {
   Box,
-  Button,
   Divider,
   List,
   ListItem,
-  ListItemIcon,
-  ListItemText,
   TextField,
   Typography,
 } from "@mui/material";
@@ -23,23 +20,19 @@ function Rooms() {
     joinRoom(room);
   };
 
+  const handleRoomClick = (room: string) => {
+    joinRoom(room);
+  };
+
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
       <Typography
         variant="h6"
-        sx={{
-          textAlign: "center",
-          padding: "1rem",
-          backgroundColor: "white",
-        }}
+        sx={{ textAlign: "center", padding: "1rem", backgroundColor: "white" }}
       >
         Rooms
       </Typography>
-      <Divider
-        sx={{
-          backgroundColor: "#7D99B4",
-        }}
-      />
+      <Divider sx={{ backgroundColor: "#7D99B4" }} />
       <Typography variant="h6" sx={{ textAlign: "center", marginTop: "1rem" }}>
         Current room is {currentRoom}
       </Typography>
@@ -48,20 +41,15 @@ function Rooms() {
       </Typography>
       <List>
         {listOfRooms.map((room, index) => (
-          <ListItem key={index}>
-            <ListItemIcon>
-              {/* <ChatBubbleOutlineOutlinedIcon /> */}
-            </ListItemIcon>
-            <ListItemText primary={room} />
+          <ListItem key={index} button onClick={() => handleRoomClick(room)}>
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Typography variant="body1">{room}</Typography>
+              🚯
+            </Box>
           </ListItem>
         ))}
       </List>
-      <Divider
-        sx={{
-          width: "80%",
-          margin: "auto",
-        }}
-      />
+      <Divider sx={{ width: "80%", margin: "auto" }} />
       <Box
         sx={{
           display: "flex",
@@ -84,19 +72,25 @@ function Rooms() {
             name="room"
             sx={{ mb: 1 }}
           />
-          <Button
+          <Typography
+            variant="body1"
+            component="button"
             type="submit"
-            variant="contained"
             sx={{
               width: "100%",
+              textAlign: "center",
+              padding: "0.5rem",
+              border: "none",
               backgroundColor: "#57B49F",
+              color: "white",
+              cursor: "pointer",
               "&:hover": {
                 backgroundColor: "#479F8B",
               },
             }}
           >
             Create new room
-          </Button>
+          </Typography>
         </Box>
       </Box>
     </Box>
