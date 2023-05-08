@@ -28,7 +28,7 @@ function App() {
     }
   }, [currentRoom]);
 
-  const onUsernameSelection = (username) => {
+  const onUsernameSelection = (username: string) => {
     setUsernameAlreadySelected(true);
     if (socket) {
       socket.auth = { username };
@@ -57,11 +57,9 @@ function App() {
             <ChatBox />
           </Box>
           <Sidebar room={currentRoom} users={usersInRoom} />
-          {currentRoom && (
-            <UsersInRoom room={currentRoom} users={usersInRoom} />
-          )}
         </Box>
       )}
+      {currentRoom && <UsersInRoom room={currentRoom} users={usersInRoom} />}
     </>
   );
 }
