@@ -8,8 +8,14 @@ import { useSocket } from "./context/SocketContext";
 function App() {
   const [usernameAlreadySelected, setUsernameAlreadySelected] = useState(false);
   const [message, setMessage] = useState("");
-  const { socket, sendMessage, messages, currentRoom, setMessages } =
-    useSocket();
+  const {
+    socket,
+    sendMessage,
+    messages,
+    currentRoom,
+    setMessages,
+    allMessageHistory,
+  } = useSocket();
 
   useEffect(() => {
     if (currentRoom) {
@@ -52,9 +58,9 @@ function App() {
           >
             <Box>Chat?</Box>
             <ul>
-              {messages.map((message, i) => (
+              {(allMessageHistory[currentRoom!] ?? []).map((message, i) => (
                 <li key={i}>
-                  {message.name}: {message.message}
+                  {message.username}: {message.message}
                 </li>
               ))}
             </ul>
@@ -69,7 +75,6 @@ function App() {
               <button type="submit">Send</button>
             </form>
           </Box>
-
           <Sidebar />
         </Box>
       )}

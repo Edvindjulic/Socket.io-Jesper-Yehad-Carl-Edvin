@@ -23,6 +23,6 @@ export interface SocketData {
 }
 
 export interface Message {
-  name: string;
+  username: string;
   message: string;
 }

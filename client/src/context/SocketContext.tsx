@@ -20,6 +20,10 @@ interface ContextValues {
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>;
   socket: Socket;
   listOfRooms: string[];
+  allMessageHistory: { [room: string]: Message[] };
+  setAllMessageHistory: React.Dispatch<
+    React.SetStateAction<{ [room: string]: Message[] }>
+  >;
 }
 
 const SocketContext = createContext<ContextValues>(null as any);
@@ -33,6 +37,9 @@ function SocketProvider({ children }: PropsWithChildren) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [currentRoom, setCurrentRoom] = useState<string>("Default");
   const [listOfRooms, setListOfRooms] = useState<string[]>([]);
+  const [allMessageHistory, setAllMessageHistory] = useState<{
+    [room: string]: Message[];
+  }>({});
 
   const joinRoom = (room: string) => {
     socket.emit("leave", currentRoom);
@@ -57,15 +64,16 @@ function SocketProvider({ children }: PropsWithChildren) {
     function disconnect() {
       console.log("Disconnected from server");
     }
-    function message(name: string, message: string) {
-      setMessages((messages) => [...messages, { name, message }]);
+    function message(username: string, message: string) {
+      setMessages((messages) => [...messages, { username, message }]);
     }
     function rooms(rooms: string[]) {
       console.log(rooms);
       setListOfRooms(rooms);
     }
+
     function allMessages(allMessages: { [room: string]: Message[] }) {
-      console.log("this is message history:", allMessages);
+      setAllMessageHistory(allMessages);
     }
 
     socket.on("connect", connect);
@@ -93,6 +101,8 @@ function SocketProvider({ children }: PropsWithChildren) {
         currentRoom,
         listOfRooms,
         setMessages,
+        allMessageHistory,
+        setAllMessageHistory,
       }}
     >
       {children}
