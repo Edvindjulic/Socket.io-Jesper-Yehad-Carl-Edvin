@@ -4,6 +4,7 @@ import {
   List,
   ListItem,
   TextField,
+  TextareaAutosize,
   Typography,
 } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
@@ -67,6 +68,11 @@ export default function ChatBox() {
               <ListItem
                 key={i}
                 ref={i === messages.length - 1 ? latestMessageRef : null}
+                sx={{
+                  wordWrap: "break-word",
+                  wordBreak: "break-word",
+                  whiteSpace: "pre-wrap",
+                }}
               >
                 {message.name}: {message.message}
               </ListItem>
@@ -87,6 +93,10 @@ export default function ChatBox() {
           }}
         >
           <TextField
+            InputProps={{
+              inputComponent: TextareaAutosize,
+              inputProps: { minRows: 1, maxRows: 4, style: { resize: "none" } },
+            }}
             name="message"
             type="text"
             value={message}
@@ -94,7 +104,7 @@ export default function ChatBox() {
             variant="outlined"
             size="small"
             sx={{
-              width: "50%",
+              width: "70%",
               backgroundColor: "white",
               borderRadius: "4px",
               "& .MuiOutlinedInput-notchedOutline": {
