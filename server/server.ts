@@ -14,6 +14,7 @@ const io = new Server<
 >();
 const allMessages: { [room: string]: { username: string; message: string }[] } =
   {};
+const usersInRooms: { [room: string]: string[] } = {};
 
 // Middleware
 io.use((socket, next) => {
@@ -48,13 +49,22 @@ io.on("connection", (socket: any) => {
 
     socket.join(room);
     console.log(socket.rooms);
+
+    // Store the username in the room
+    if (!usersInRooms[room]) {
+      usersInRooms[room] = [];
+    }
+    usersInRooms[room].push(username);
+
     if (ack) {
       console.log("Acknowledging client");
-
       ack();
     }
-    // When a user joins a room, send an updated list of rooms to everyone
+
+    // When a user joins a room, send an updated list of rooms and users to everyone
     io.emit("rooms", getRooms());
+    io.emit("usersInRooms", usersInRooms);
+
     console.log(getRooms());
   });
 
@@ -63,8 +73,19 @@ io.on("connection", (socket: any) => {
 
   socket.on("disconnect", () => {
     console.log(`${username} has disconnected from the server`);
-    // io.emit("leave", `${username} has disconnected from the server`);
+
+    // Remove the username from the room
+    const room = Object.keys(socket.rooms)[1];
+    if (usersInRooms[room]) {
+      const index = usersInRooms[room].indexOf(username);
+      if (index !== -1) {
+        usersInRooms[room].splice(index, 1);
+      }
+    }
+
     io.emit("rooms", getRooms());
+    io.emit("usersInRooms", usersInRooms);
+
     console.log(getRooms());
   });
 
@@ -72,7 +93,6 @@ io.on("connection", (socket: any) => {
     socket.leave(room);
     io.emit("rooms", getRooms());
     console.log(`${username} has left the room ${room}`);
-    // io.to(room).emit("userLeft", `${username} has left the room ${room}`);
   });
 });
 
@@ -90,4 +110,3 @@ function getRooms() {
 }
 
 io.listen(3000);
-console;
