@@ -9,7 +9,7 @@ import {
 import { useSocket } from "../context/SocketContext";
 
 function Rooms() {
-  const { currentRoom, joinRoom, listOfRooms } = useSocket();
+  const { currentRoom, joinRoom, listOfRooms, allMessageHistory } = useSocket();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

@@ -15,7 +15,8 @@ const drawerWidth = "20vw";
 export default function ChatBox() {
   const [message, setMessage] = useState("");
   const [typingUsers, setTypingUsers] = useState<string[]>([]);
-  const { socket, sendMessage, messages, currentRoom } = useSocket();
+  const { socket, sendMessage, messages, currentRoom, allMessageHistory } =
+    useSocket();
   const latestMessageRef = useRef<HTMLLIElement>(null);
   const [typing, setTyping] = useState(false);
 
@@ -37,8 +38,6 @@ export default function ChatBox() {
       setTyping(true);
     }
   };
-  
-  
 
   const handleBlur = () => {
     if (typing) {
@@ -64,15 +63,13 @@ export default function ChatBox() {
       });
       setTyping(isTyping);
     };
-    
-  
+
     socket.on("typing", onTyping);
-  
+
     return () => {
       socket.off("typing", onTyping);
     };
   }, [socket]);
-  
 
   return (
     <Box
@@ -96,118 +93,118 @@ export default function ChatBox() {
         Chat in <span style={{ fontWeight: "bold" }}>{currentRoom}</span> room
       </Typography>
       <Box
-  sx={{
-    width: "60vw",
-    height: "80vh",
-    marginBottom: "1rem",
-    overflowY: "auto",
-    border: "1px solid #7D99B4",
-    display: "flex",
-    flexDirection: "column",
-  }}
->
-  <Box sx={{ flexGrow: 1, overflowY: "auto" }}>
-    <List>
-      {messages.map((message, i) => (
-        <ListItem
-          key={i}
-          ref={i === messages.length - 1 ? latestMessageRef : null}
-          sx={{
-            wordWrap: "break-word",
-            wordBreak: "break-word",
-            whiteSpace: "pre-wrap",
-          }}
-        >
-          {message.name}: {message.message}
-        </ListItem>
-      ))}
-    </List>
-  </Box>
-  <Box sx={{ flexGrow: 0 }}>
-    {typingUsers.length > 0 && (
-      <Typography
         sx={{
-          padding: "0.5rem",
-          backgroundColor: "#E6EEF4",
-          textAlign: "center",
-          width: "100%",
+          width: "60vw",
+          height: "80vh",
+          marginBottom: "1rem",
+          overflowY: "auto",
+          border: "1px solid #7D99B4",
+          display: "flex",
+          flexDirection: "column",
         }}
       >
-        {typingUsers.join(", ")} {typingUsers.length > 1 ? "are" : "is"}{" "}
-        typing...
-      </Typography>
-    )}
-  </Box>
-  <Box
-    component="form"
-    onSubmit={handleSubmit}
-    sx={{
-      display: "flex",
-      flexDirection: "row",
-      width: "100%",
-      justifyContent: "center",
-      alignItems: "center",
-      backgroundColor: "#4C79B5",
-      padding: "1rem",
-    }}
-  >
-    <TextField
-      InputProps={{
-        inputComponent: TextareaAutosize,
-        inputProps: { minRows: 1, maxRows: 4, style: { resize: "none" } },
-      }}
-      name="message"
-      type="text"
-      value={message}
-      onChange={(e) => setMessage(e.target.value)}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" && !e.shiftKey) {
-          e.preventDefault();
-          submitMessage();
-        }
-      }}
-      onInput={handleKeyPress}
-      onBlur={handleBlur}
-      variant="outlined"
-      size="small"
-      sx={{
-        width: "70%",
-        backgroundColor: "white",
-        borderRadius: "4px",
-        "& .MuiOutlinedInput-notchedOutline": {
-          borderColor: "#7D99B4",
-          borderWidth: "2px",
-        },
-        "&:hover .MuiOutlinedInput-notchedOutline": {
-          borderColor: "#7D99B4",
-          borderWidth: "2px",
-        },
-        "& .MuiOutlinedInput-input": {
-          borderRadius: "4px",
-          borderColor: "#7D99B4",
-        },
-        "& .MuiInputBase-root.Mui-focused .MuiOutlinedInput-notchedOutline":
-          {
-            borderColor: "#7D99B4",
-            borderWidth: "2px",
-          },
-      }}
-    />
-    <Button
-      type="submit"
-      variant="contained"
-      disableElevation
-      sx={{
-        width: "10%",
-        marginLeft: "1rem",
-        backgroundColor: "#E6EEF4",
-        color: "#7D99B4",
-        "&:hover": {
-          backgroundColor: "#E6EEF4",
-          boxShadow: "none",
-        },
-      }}
-    >
+        <Box sx={{ flexGrow: 1, overflowY: "auto" }}>
+          <List>
+            {(allMessageHistory[currentRoom!] ?? []).map((message, i) => (
+              <ListItem
+                key={i}
+                ref={i === messages.length - 1 ? latestMessageRef : null}
+                sx={{
+                  wordWrap: "break-word",
+                  wordBreak: "break-word",
+                  whiteSpace: "pre-wrap",
+                }}
+              >
+                {message.username}: {message.message}
+              </ListItem>
+            ))}
+          </List>
+        </Box>
+        <Box sx={{ flexGrow: 0 }}>
+          {typingUsers.length > 0 && (
+            <Typography
+              sx={{
+                padding: "0.5rem",
+                backgroundColor: "#E6EEF4",
+                textAlign: "center",
+                width: "100%",
+              }}
+            >
+              {typingUsers.join(", ")} {typingUsers.length > 1 ? "are" : "is"}{" "}
+              typing...
+            </Typography>
+          )}
+        </Box>
+        <Box
+          component="form"
+          onSubmit={handleSubmit}
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            width: "100%",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "#4C79B5",
+            padding: "1rem",
+          }}
+        >
+          <TextField
+            InputProps={{
+              inputComponent: TextareaAutosize,
+              inputProps: { minRows: 1, maxRows: 4, style: { resize: "none" } },
+            }}
+            name="message"
+            type="text"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                submitMessage();
+              }
+            }}
+            onInput={handleKeyPress}
+            onBlur={handleBlur}
+            variant="outlined"
+            size="small"
+            sx={{
+              width: "70%",
+              backgroundColor: "white",
+              borderRadius: "4px",
+              "& .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#7D99B4",
+                borderWidth: "2px",
+              },
+              "&:hover .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#7D99B4",
+                borderWidth: "2px",
+              },
+              "& .MuiOutlinedInput-input": {
+                borderRadius: "4px",
+                borderColor: "#7D99B4",
+              },
+              "& .MuiInputBase-root.Mui-focused .MuiOutlinedInput-notchedOutline":
+                {
+                  borderColor: "#7D99B4",
+                  borderWidth: "2px",
+                },
+            }}
+          />
+          <Button
+            type="submit"
+            variant="contained"
+            disableElevation
+            sx={{
+              width: "10%",
+              marginLeft: "1rem",
+              backgroundColor: "#E6EEF4",
+              color: "#7D99B4",
+              "&:hover": {
+                backgroundColor: "#E6EEF4",
+                boxShadow: "none",
+              },
+            }}
+          >
             Send
           </Button>
         </Box>
