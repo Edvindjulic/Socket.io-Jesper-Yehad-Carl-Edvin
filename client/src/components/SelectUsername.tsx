@@ -68,7 +68,13 @@ export default function SelectUsername({ onInput }: SelectUsernameProps) {
             },
             "& .MuiOutlinedInput-input": {
               borderRadius: "4px",
+              borderColor: "#7D99B4",
             },
+            "& .MuiInputBase-root.Mui-focused .MuiOutlinedInput-notchedOutline":
+              {
+                borderColor: "#7D99B4",
+                borderWidth: "2px",
+              },
             position: "relative",
           }}
           variant="outlined"

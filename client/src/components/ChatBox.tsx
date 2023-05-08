@@ -44,7 +44,7 @@ export default function ChatBox() {
           width: "60vw",
           padding: "0.5rem",
           textAlign: "center",
-          backgroundColor: "#7D99B4",
+          backgroundColor: "#4C79B5",
         }}
       >
         Chat in <span style={{ fontWeight: "bold" }}>{currentRoom}</span> room
@@ -82,12 +82,12 @@ export default function ChatBox() {
             width: "100%",
             justifyContent: "center",
             alignItems: "center",
-            marginBottom: "1rem",
+            backgroundColor: "#4C79B5",
+            padding: "1rem",
           }}
         >
           <TextField
             name="message"
-            label="Write a message..."
             type="text"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
@@ -96,15 +96,40 @@ export default function ChatBox() {
             sx={{
               width: "50%",
               backgroundColor: "white",
+              borderRadius: "4px",
+              "& .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#7D99B4",
+                borderWidth: "2px",
+              },
+              "&:hover .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#7D99B4",
+                borderWidth: "2px",
+              },
+              "& .MuiOutlinedInput-input": {
+                borderRadius: "4px",
+                borderColor: "#7D99B4",
+              },
+              "& .MuiInputBase-root.Mui-focused .MuiOutlinedInput-notchedOutline":
+                {
+                  borderColor: "#7D99B4",
+                  borderWidth: "2px",
+                },
             }}
           />
+
           <Button
             type="submit"
             variant="contained"
-            color="primary"
+            disableElevation
             sx={{
               width: "10%",
               marginLeft: "1rem",
+              backgroundColor: "#E6EEF4",
+              color: "#7D99B4",
+              "&:hover": {
+                backgroundColor: "#E6EEF4",
+                boxShadow: "none",
+              },
             }}
           >
             Send

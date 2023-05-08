@@ -33,10 +33,17 @@ function App() {
           sx={{
             height: "100vh",
             background:
-              "linear-gradient(180deg, rgba(202, 221, 240, 1) 0%, rgba(230, 237, 248, 0) 100%)",
+                "linear-gradient(180deg, rgba(202, 221, 240, 1) 0%, rgba(230, 237, 248, 0) 100%)",
           }}
         >
-          <ChatBox /> {/* Add the ChatBox component */}
+          <Box
+            sx={{
+              paddingTop: "2rem", // Adjust this value to change the margin-top
+              height: "100%",
+            }}
+          >
+            <ChatBox />
+          </Box>
           <Sidebar />
         </Box>
       )}
