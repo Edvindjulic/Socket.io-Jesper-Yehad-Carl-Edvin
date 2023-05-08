@@ -38,7 +38,7 @@ function App() {
         >
           <Box
             sx={{
-              paddingTop: "2rem", // Adjust this value to change the margin-top
+              paddingTop: "2rem",
               height: "100%",
             }}
           >
@@ -52,3 +52,4 @@ function App() {
 }
 
 export default App;
+
