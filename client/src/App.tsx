@@ -7,7 +7,7 @@ import { useSocket } from "./context/SocketContext";
 
 function App() {
   const [usernameAlreadySelected, setUsernameAlreadySelected] = useState(false);
-  const [selectedUsername, setSelectedUsername] = useState("");
+  // const [selectedUsername, setSelectedUsername] = useState("");
   const [message, setMessage] = useState("");
   const [typing, setTyping] = useState(false);
   const { socket, sendMessage, messages, currentRoom, setMessages } = useSocket();
@@ -16,10 +16,26 @@ function App() {
     if (currentRoom) {
       setMessages([]);
     }
-  }, [currentRoom]);
+
+    const onTyping = (username: string, isTyping: boolean) => {
+      setTypingUsers((users) => {
+        if (isTyping) {
+          return [...users, username];
+        } else {
+          return users.filter((user) => user !== username);
+        }
+      });
+    };
+
+    socket.on("typing", onTyping);
+
+    return () => {
+      socket.off("typing", onTyping);
+    };
+  }, [currentRoom, socket]);
 
   const onUsernameSelection = (username: string) => {
-    setSelectedUsername(username);
+    // setSelectedUsername(username);
     setUsernameAlreadySelected(true);
     if (socket) {
       socket.auth = { username };
@@ -34,8 +50,9 @@ function App() {
   };
 
   const handleKeyPress = () => {
-    if (!typing) {
+    if (!typing && currentRoom) {
       socket.emit("typing", currentRoom, true);
+      console.log(typingUsers);
       setTyping(true);
     }
   };
@@ -44,8 +61,11 @@ function App() {
     if (typing) {
       socket.emit("typing", currentRoom, false);
       setTyping(false);
+      console.log(typingUsers);
     }
   };
+
+  const [typingUsers, setTypingUsers] = useState<string[]>([]);
 
   return (
     <>
@@ -74,7 +94,13 @@ function App() {
                 </li>
               ))}
             </ul>
-            {typing && <div>{selectedUsername} is typing...</div>}
+            {typingUsers.length > 0 && (
+              <div>
+                {typingUsers.map((username) => (
+                  <div key={username}>{username} is typing...</div>
+                ))}
+              </div>
+            )}
             <form onSubmit={handleSubmit}>
               <input
                 name="message"
