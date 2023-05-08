@@ -17,10 +17,16 @@ export default function ChatBox() {
   const { sendMessage, messages, currentRoom } = useSocket();
   const latestMessageRef = useRef<HTMLLIElement>(null);
 
+  const submitMessage = () => {
+    if (message.trim()) {
+      sendMessage(message);
+      setMessage("");
+    }
+  };
+  
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    sendMessage(message);
-    setMessage("");
+    submitMessage();
   };
 
   useEffect(() => {
@@ -101,6 +107,12 @@ export default function ChatBox() {
             type="text"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                submitMessage();
+              }
+            }}
             variant="outlined"
             size="small"
             sx={{
