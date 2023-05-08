@@ -6,14 +6,8 @@ import type {
   SocketData,
 } from "./communication";
 
-const io = new Server<
-  ClientToServerEvents,
-  ServerToClientEvents,
-  InterServerEvents,
-  SocketData
->();
-const allMessages: { [room: string]: { username: string; message: string }[] } =
-  {};
+const io = new Server<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>();
+const allMessages: { [room: string]: { username: string; message: string }[] } = {};
 
 // Middleware
 io.use((socket, next) => {
@@ -73,6 +67,11 @@ io.on("connection", (socket: any) => {
     io.emit("rooms", getRooms());
     console.log(`${username} has left the room ${room}`);
     // io.to(room).emit("userLeft", `${username} has left the room ${room}`);
+  });
+
+  socket.on("typing", (room: string, isTyping: boolean) => {
+    socket.broadcast.to(room).emit("typing", socket.username, isTyping);
+    console.log(`${socket.username} is typing`);
   });
 });
 

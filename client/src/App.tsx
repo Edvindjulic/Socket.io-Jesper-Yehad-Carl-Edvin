@@ -7,9 +7,10 @@ import { useSocket } from "./context/SocketContext";
 
 function App() {
   const [usernameAlreadySelected, setUsernameAlreadySelected] = useState(false);
+  const [selectedUsername, setSelectedUsername] = useState("");
   const [message, setMessage] = useState("");
-  const { socket, sendMessage, messages, currentRoom, setMessages } =
-    useSocket();
+  const [typing, setTyping] = useState(false);
+  const { socket, sendMessage, messages, currentRoom, setMessages } = useSocket();
 
   useEffect(() => {
     if (currentRoom) {
@@ -18,6 +19,7 @@ function App() {
   }, [currentRoom]);
 
   const onUsernameSelection = (username: string) => {
+    setSelectedUsername(username);
     setUsernameAlreadySelected(true);
     if (socket) {
       socket.auth = { username };
@@ -29,6 +31,20 @@ function App() {
     e.preventDefault();
     sendMessage(message);
     setMessage("");
+  };
+
+  const handleKeyPress = () => {
+    if (!typing) {
+      socket.emit("typing", currentRoom, true);
+      setTyping(true);
+    }
+  };
+
+  const handleBlur = () => {
+    if (typing) {
+      socket.emit("typing", currentRoom, false);
+      setTyping(false);
+    }
   };
 
   return (
@@ -58,6 +74,7 @@ function App() {
                 </li>
               ))}
             </ul>
+            {typing && <div>{selectedUsername} is typing...</div>}
             <form onSubmit={handleSubmit}>
               <input
                 name="message"
@@ -65,6 +82,8 @@ function App() {
                 type="text"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
+                onKeyDown={handleKeyPress}
+                onBlur={handleBlur}
               />
               <button type="submit">Send</button>
             </form>
