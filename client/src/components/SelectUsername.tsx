@@ -62,12 +62,16 @@ export default function SelectUsername({ onInput }: SelectUsernameProps) {
               borderColor: "#7D99B4",
               borderWidth: "2px",
             },
-            "&:hover .MuiOutlinedInput-notchedOutline": {
+            "& .MuiOutlinedInput-notchedOutline.Mui-focused": {
               borderColor: "#7D99B4",
               borderWidth: "2px",
             },
             "& .MuiOutlinedInput-input": {
               borderRadius: "4px",
+              borderColor: "#7D99B4",
+            },
+            "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#7D99B4",
             },
             position: "relative",
           }}
