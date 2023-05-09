@@ -74,6 +74,8 @@ io.on("connection", (socket) => {
 
     console.log("Before", socket.data.room);
     socket.data.room = room;
+    sessionStore.saveSession(socket.data.sessionID!, socket.data as SocketData); // Add this line
+
     socket.join(room);
     console.log("Socket data after set", socket.data.room);
     console.log(socket.rooms);
