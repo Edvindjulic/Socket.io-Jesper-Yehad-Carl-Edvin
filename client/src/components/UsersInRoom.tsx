@@ -16,11 +16,11 @@ const UsersInRoom: React.FC<UsersInRoomProps> = ({ room }) => {
       }) => {
         const usersInCurrentRoom = usersInRooms[room] || [];
         setUsers((prevUsers) => {
-          // Filter out users that are already in the list
+          // Filtrera ut users som redan finns
           const newUsers = usersInCurrentRoom.filter(
             (user) => !prevUsers.includes(user)
           );
-          // Concatenate the new users with the existing list
+          // Lägg till nya användare i listan
           return [...prevUsers, ...newUsers];
         });
       };
