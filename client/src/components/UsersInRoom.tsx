@@ -27,7 +27,6 @@ const UsersInRoom: React.FC<UsersInRoomProps> = ({ room }) => {
 
   return (
     <div>
-      <h3>Room: {room}</h3>
       <ul>
         {users.map((user) => (
           <li key={user}>{user}</li>
