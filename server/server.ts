@@ -103,7 +103,7 @@ function getRooms() {
   const roomsFound: string[] = [];
 
   for (const [name, setOfSocketIds] of rooms) {
-    // An actual real room that we created
+    // An actual real room that we created- this is in progress
     if (!setOfSocketIds.has(name)) {
       roomsFound.push(name);
     }
