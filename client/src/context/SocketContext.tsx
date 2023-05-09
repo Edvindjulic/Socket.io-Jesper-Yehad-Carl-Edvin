@@ -61,11 +61,14 @@ function SocketProvider({ children }: PropsWithChildren) {
   }, [currentRoom]);
 
   useEffect(() => {
-    socket.on("session", ({ sessionID }) => {
+    socket.on("session", ({ sessionID, room }) => {
       // attach the session ID to the next reconnection attempts
       socket.auth = { sessionID };
       // store it in the localStorage
       sessionStorage.setItem("sessionID", sessionID);
+      sessionStorage.setItem("room", room);
+      setCurrentRoom(room);
+      console.log(room);
       // save the ID of the user
       //ocket.userID = userID;
     });

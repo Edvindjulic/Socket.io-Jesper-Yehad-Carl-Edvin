@@ -28,6 +28,7 @@ io.use((socket, next) => {
       socket.data.sessionID = sessionID;
       socket.data.userID = session.userID;
       socket.data.username = session.username;
+      socket.data.room = session.room;
       return next();
     }
   }
@@ -39,6 +40,7 @@ io.use((socket, next) => {
   socket.data.sessionID = Date.now().toString();
   socket.data.userID = Date.now().toString();
   socket.data.username = username;
+  socket.data.room = "default";
   sessionStore.saveSession(socket.data.sessionID, socket.data as SocketData);
   next();
 });
@@ -48,8 +50,12 @@ io.on("connection", (socket) => {
   socket.emit("session", socket.data as SocketData);
 
   console.log(`${username} has connected to the server`);
-  console.log(socket.data);
-  console.log(sessionStore.findAllSessions());
+  /* console.log(socket.data);
+  console.log(sessionStore.findAllSessions()); */
+  if (socket.data.room && socket.data.room !== "default") {
+    socket.join(socket.data.room);
+    console.log("I rejoin the", socket.data.room);
+  }
 
   socket.on("message", (room: string, message: string) => {
     io.to(room).emit("message", socket.data.username!, message);
@@ -63,10 +69,13 @@ io.on("connection", (socket) => {
   });
 
   socket.on("join", (room: string, ack?: () => void) => {
-    console.log("Received join event from client");
+    console.log("Received   join event from client");
     console.log("Ack function:", ack);
 
+    console.log("Before", socket.data.room);
+    socket.data.room = room;
     socket.join(room);
+    console.log("Socket data after set", socket.data.room);
     console.log(socket.rooms);
     if (ack) {
       console.log("Acknowledging client");

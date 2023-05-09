@@ -24,6 +24,7 @@ export interface SocketData {
   username: string;
   userID: string;
   sessionID: string;
+  room: string;
 }
 
 export interface Message {
