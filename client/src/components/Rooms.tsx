@@ -43,15 +43,15 @@ function Rooms() {
         {listOfRooms.map((room, index) => (
           <ListItem
             key={index}
-            sx={{ background: room === currentRoom ? "red" : "blue" }}
+            sx={{ background: room === currentRoom ? "#4C79B5" : "#7D99B4" }}
             button
             onClick={() =>
               room === currentRoom ? leaveRoom(room) : handleRoomClick(room)
             }
           >
             <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Typography variant="body1">{room}</Typography>
-              🚯
+              {room === currentRoom ? "🚪 " : "✅ "}
+              <Typography variant="body1"> {room}</Typography>
             </Box>
           </ListItem>
         ))}
