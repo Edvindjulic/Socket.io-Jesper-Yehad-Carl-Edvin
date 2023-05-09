@@ -7,8 +7,8 @@ import Sidebar from "./components/Sidebar";
 import { useSocket } from "./context/SocketContext";
 
 function App() {
-  const [usernameAlreadySelected, setUsernameAlreadySelected] = useState(false);
-  const { socket, setMessages, currentRoom } = useSocket();
+
+  const { socket, setMessages, currentRoom, usernameAlreadySelected, setUsernameAlreadySelected } = useSocket();
 
   useEffect(() => {
     if (currentRoom) {
