@@ -11,7 +11,6 @@ const UsersInRoom: React.FC<UsersInRoomProps> = ({ room }) => {
 
   useEffect(() => {
     if (socket) {
-      // Handle the 'usersInRooms' event to update the list of users
       const handleUsersInRooms = (usersInRooms: {
         [room: string]: string[];
       }) => {
@@ -20,7 +19,6 @@ const UsersInRoom: React.FC<UsersInRoomProps> = ({ room }) => {
       };
       socket.on("usersInRooms", handleUsersInRooms);
 
-      // Clean up the event listener when the component unmounts
       return () => {
         socket.off("usersInRooms", handleUsersInRooms);
       };
