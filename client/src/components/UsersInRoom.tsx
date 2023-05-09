@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSocket } from "../context/SocketContext";
 
 interface UsersInRoomProps {
@@ -15,7 +15,14 @@ const UsersInRoom: React.FC<UsersInRoomProps> = ({ room }) => {
         [room: string]: string[];
       }) => {
         const usersInCurrentRoom = usersInRooms[room] || [];
-        setUsers(usersInCurrentRoom);
+        setUsers((prevUsers) => {
+          // Filter out users that are already in the list
+          const newUsers = usersInCurrentRoom.filter(
+            (user) => !prevUsers.includes(user)
+          );
+          // Concatenate the new users with the existing list
+          return [...prevUsers, ...newUsers];
+        });
       };
       socket.on("usersInRooms", handleUsersInRooms);
 
