@@ -56,6 +56,7 @@ io.on("connection", (socket) => {
     socket.join(socket.data.room);
     console.log("I rejoin the", socket.data.room);
   }
+  io.emit("rooms", getRooms());
 
   socket.on("message", (room: string, message: string) => {
     io.to(room).emit("message", socket.data.username!, message);
