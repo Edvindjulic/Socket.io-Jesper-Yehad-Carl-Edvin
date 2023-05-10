@@ -5,43 +5,80 @@ import type {
   ServerToClientEvents,
   SocketData,
 } from "./communication";
+import SessionStore from "./sessionStore";
 
-const io = new Server<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>();
-const allMessages: { [room: string]: { username: string; message: string }[] } = {};
+const sessionStore = new SessionStore();
 
-// Middleware
+const io = new Server<
+  ClientToServerEvents,
+  ServerToClientEvents,
+  InterServerEvents,
+  SocketData
+>();
+const allMessages: { [room: string]: { username: string; message: string }[] } =
+  {};
+
+// Exempel från socket.io
 io.use((socket, next) => {
-  const username = socket.handshake.auth.username;
-  if (typeof username === "string") {
-    // Next -> Error om username inte är en string
-    (socket as any).username = username;
-    next(); // Next -> Skickar vidare till  "connection"
-  } else {
-    next(new Error("invalid username"));
+  const sessionID = socket.handshake.auth.sessionID;
+  if (sessionID) {
+    // find existing session
+    const session = sessionStore.findSession(sessionID);
+    if (session) {
+      socket.data.sessionID = sessionID;
+      socket.data.userID = session.userID;
+      socket.data.username = session.username;
+      socket.data.room = session.room;
+      return next();
+    }
   }
+  const username = socket.handshake.auth.username;
+  if (!username) {
+    return next(new Error("invalid username"));
+  }
+  // create new session
+  socket.data.sessionID = Date.now().toString();
+  socket.data.userID = Date.now().toString();
+  socket.data.username = username;
+  socket.data.room = "default";
+  sessionStore.saveSession(socket.data.sessionID, socket.data as SocketData);
+  next();
 });
 
-io.on("connection", (socket: any) => {
-  const username = socket.username;
+io.on("connection", (socket) => {
+  const username = socket.data.username;
+  socket.emit("session", socket.data as SocketData);
 
   console.log(`${username} has connected to the server`);
+  /* console.log(socket.data);
+  console.log(sessionStore.findAllSessions()); */
+  if (socket.data.room && socket.data.room !== "default") {
+    socket.join(socket.data.room);
+    console.log("I rejoin the", socket.data.room);
+  }
+  io.emit("rooms", getRooms());
 
   socket.on("message", (room: string, message: string) => {
-    io.to(room).emit("message", socket.username, message);
-    console.log(room, socket.username, message);
+    io.to(room).emit("message", socket.data.username!, message);
+    console.log(room, socket.data.username, message);
     if (!allMessages[room]) {
       allMessages[room] = [];
     }
-    allMessages[room].push({ username: socket.username, message });
+    allMessages[room].push({ username: socket.data.username!, message });
     io.emit("allMessages", allMessages); // Add this line
     console.log(allMessages);
   });
 
   socket.on("join", (room: string, ack?: () => void) => {
-    console.log("Received join event from client");
+    console.log("Received   join event from client");
     console.log("Ack function:", ack);
 
+    console.log("Before", socket.data.room);
+    socket.data.room = room;
+    sessionStore.saveSession(socket.data.sessionID!, socket.data as SocketData); // Add this line
+
     socket.join(room);
+    console.log("Socket data after set", socket.data.room);
     console.log(socket.rooms);
     if (ack) {
       console.log("Acknowledging client");
@@ -72,8 +109,8 @@ io.on("connection", (socket: any) => {
   });
 
   socket.on("typing", (room: string, isTyping: boolean) => {
-    socket.broadcast.to(room).emit("typing", socket.username, isTyping);
-    console.log(`${socket.username} is typing`);
+    socket.broadcast.to(room).emit("typing", socket.data.username!, isTyping);
+    console.log(`${socket.data.username} is typing`);
   });
 });
 

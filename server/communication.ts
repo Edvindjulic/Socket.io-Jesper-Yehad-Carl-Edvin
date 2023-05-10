@@ -2,6 +2,8 @@ export interface ServerToClientEvents {
   message: (name: string, message: string) => void;
   rooms: (rooms: string[]) => void;
   allMessages: (allMessages: { [room: string]: Message[] }) => void;
+  typing: (username: string, isTyping: boolean) => void;
+  session: (session: SocketData) => void;
 }
 
 export interface ClientToServerEvents {
@@ -19,8 +21,10 @@ export interface InterServerEvents {
 }
 
 export interface SocketData {
-  name: string;
-  age: number;
+  username: string;
+  userID: string;
+  sessionID: string;
+  room: string;
 }
 
 export interface Message {
