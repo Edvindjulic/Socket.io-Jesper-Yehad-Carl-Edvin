@@ -9,7 +9,7 @@ import {
 import { useSocket } from "../context/SocketContext";
 
 function Rooms() {
-  const { currentRoom, joinRoom, listOfRooms, leaveRoom } = useSocket();
+  const { currentRoom, joinRoom, listOfRooms, leaveRoom, users } = useSocket();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -100,6 +100,14 @@ function Rooms() {
           </Typography>
         </Box>
       </Box>
+      <div>
+      <h2>Online Users</h2>
+      <ul>
+        {users.map((user) => (
+          <li key={user.userID}>{user.username}</li>
+        ))}
+      </ul>
+    </div>
     </Box>
   );
 }
