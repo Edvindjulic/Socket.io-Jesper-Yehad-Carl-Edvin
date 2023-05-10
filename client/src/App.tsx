@@ -1,7 +1,6 @@
-import { Box } from "@mui/material";
 import { useEffect, useState } from "react";
-import "./App.css";
-import ChatBox from "./components/ChatBox"; // Import ChatBox component
+import { Box } from "../node_modules/@mui/material/index";
+import ChatBox from "./components/ChatBox";
 import NoRoom from "./components/NoRoom";
 import SelectUsername from "./components/SelectUsername";
 import Sidebar from "./components/Sidebar";
@@ -57,10 +56,12 @@ function App() {
           >
             {currentRoom === "Default" ? <NoRoom /> : <ChatBox />}
           </Box>
-          <Sidebar room={currentRoom} users={usersInRoom} />
+          <Sidebar room={currentRoom ?? ""} users={usersInRoom} />
         </Box>
       )}
-      {currentRoom && <UsersInRoom room={currentRoom} users={usersInRoom} />}
+      {currentRoom && (
+        <UsersInRoom room={currentRoom ?? ""} users={usersInRoom} />
+      )}
     </>
   );
 }
