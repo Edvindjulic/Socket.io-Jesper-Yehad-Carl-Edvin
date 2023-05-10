@@ -14,6 +14,7 @@ import type {
 
 interface ContextValues {
   joinRoom: (room: string) => void;
+  leaveRoom: (room: string) => void;
   sendMessage: (message: string) => void;
   currentRoom?: string;
   messages: Message[];
@@ -50,6 +51,11 @@ function SocketProvider({ children }: PropsWithChildren) {
       console.log("Received acknowledgement from server");
       setCurrentRoom(room);
     });
+  };
+
+  const leaveRoom = () => {
+    socket.emit("leave", currentRoom);
+    setCurrentRoom("Default");
   };
 
   const sendMessage = (message: string) => {
@@ -122,6 +128,7 @@ function SocketProvider({ children }: PropsWithChildren) {
     <SocketContext.Provider
       value={{
         joinRoom,
+        leaveRoom,
         socket,
         messages,
         sendMessage,
