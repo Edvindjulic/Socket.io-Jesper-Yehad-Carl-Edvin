@@ -102,6 +102,8 @@ io.on("connection", (socket) => {
   });
 
   socket.on("leave", (room: string) => {
+    socket.data.room = "default";
+    sessionStore.saveSession(socket.data.sessionID!, socket.data as SocketData);
     socket.leave(room);
     io.emit("rooms", getRooms());
     console.log(`${username} has left the room ${room}`);
