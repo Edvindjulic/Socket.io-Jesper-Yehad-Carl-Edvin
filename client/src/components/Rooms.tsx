@@ -9,7 +9,7 @@ import {
 import { useSocket } from "../context/SocketContext";
 
 function Rooms() {
-  const { currentRoom, joinRoom, listOfRooms, allMessageHistory } = useSocket();
+  const { currentRoom, joinRoom, listOfRooms, leaveRoom } = useSocket();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -41,10 +41,17 @@ function Rooms() {
       </Typography>
       <List>
         {listOfRooms.map((room, index) => (
-          <ListItem key={index} button onClick={() => handleRoomClick(room)}>
+          <ListItem
+            key={index}
+            sx={{ background: room === currentRoom ? "#4C79B5" : "#7D99B4" }}
+            button
+            onClick={() =>
+              room === currentRoom ? leaveRoom(room) : handleRoomClick(room)
+            }
+          >
             <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Typography variant="body1">{room}</Typography>
-              🚯
+              {room === currentRoom ? "🚪 " : "✅ "}
+              <Typography variant="body1"> {room}</Typography>
             </Box>
           </ListItem>
         ))}

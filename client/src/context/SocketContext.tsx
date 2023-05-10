@@ -14,6 +14,7 @@ import type {
 
 interface ContextValues {
   joinRoom: (room: string) => void;
+  leaveRoom: (room: string) => void;
   sendMessage: (message: string) => void;
   currentRoom?: string;
   messages: Message[];
@@ -24,6 +25,8 @@ interface ContextValues {
   setAllMessageHistory: React.Dispatch<
     React.SetStateAction<{ [room: string]: Message[] }>
   >;
+  usernameAlreadySelected: boolean;
+  setUsernameAlreadySelected: (value: boolean) => void;
 }
 
 const SocketContext = createContext<ContextValues>(null as any);
@@ -32,7 +35,7 @@ export const useSocket = () => useContext(SocketContext);
 
 function SocketProvider({ children }: PropsWithChildren) {
   const [socket] = useState<Socket<ServerToClientEvents, ClientToServerEvents>>(
-    io()
+    io({ autoConnect: false })
   );
   const [messages, setMessages] = useState<Message[]>([]);
   const [currentRoom, setCurrentRoom] = useState<string>("Default");
@@ -40,6 +43,7 @@ function SocketProvider({ children }: PropsWithChildren) {
   const [allMessageHistory, setAllMessageHistory] = useState<{
     [room: string]: Message[];
   }>({});
+  const [usernameAlreadySelected, setUsernameAlreadySelected] = useState(false);
 
   const joinRoom = (room: string) => {
     socket.emit("leave", currentRoom);
@@ -49,6 +53,11 @@ function SocketProvider({ children }: PropsWithChildren) {
     });
   };
 
+  const leaveRoom = () => {
+    socket.emit("leave", currentRoom);
+    setCurrentRoom("Default");
+  };
+
   const sendMessage = (message: string) => {
     if (!currentRoom) throw Error("Not in a room");
     socket.emit("message", currentRoom, message);
@@ -56,6 +65,30 @@ function SocketProvider({ children }: PropsWithChildren) {
   useEffect(() => {
     console.log("Updated current room:", currentRoom);
   }, [currentRoom]);
+
+  useEffect(() => {
+    socket.on("session", ({ sessionID, room }) => {
+      // attach the session ID to the next reconnection attempts
+      socket.auth = { sessionID };
+      // store it in the localStorage
+      sessionStorage.setItem("sessionID", sessionID);
+      sessionStorage.setItem("room", room);
+      setCurrentRoom(room);
+      console.log(room);
+      // save the ID of the user
+      //ocket.userID = userID;
+    });
+  }, [socket]);
+
+  useEffect(() => {
+    const sessionID = sessionStorage.getItem("sessionID");
+
+    if (sessionID) {
+      setUsernameAlreadySelected(true);
+      socket.auth = { sessionID };
+      socket.connect();
+    }
+  }, [socket]);
 
   useEffect(() => {
     function connect() {
@@ -95,6 +128,7 @@ function SocketProvider({ children }: PropsWithChildren) {
     <SocketContext.Provider
       value={{
         joinRoom,
+        leaveRoom,
         socket,
         messages,
         sendMessage,
@@ -103,6 +137,8 @@ function SocketProvider({ children }: PropsWithChildren) {
         setMessages,
         allMessageHistory,
         setAllMessageHistory,
+        usernameAlreadySelected,
+        setUsernameAlreadySelected,
       }}
     >
       {children}
