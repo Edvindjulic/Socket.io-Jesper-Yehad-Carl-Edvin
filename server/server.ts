@@ -40,7 +40,7 @@ io.use((socket, next) => {
   socket.data.sessionID = Date.now().toString();
   socket.data.userID = Date.now().toString();
   socket.data.username = username;
-  socket.data.room = "default";
+  socket.data.room = "Default";
   sessionStore.saveSession(socket.data.sessionID, socket.data as SocketData);
   next();
 });
@@ -52,7 +52,7 @@ io.on("connection", (socket) => {
   console.log(`${username} has connected to the server`);
   /* console.log(socket.data);
   console.log(sessionStore.findAllSessions()); */
-  if (socket.data.room && socket.data.room !== "default") {
+  if (socket.data.room && socket.data.room !== "Default") {
     socket.join(socket.data.room);
     console.log("I rejoin the", socket.data.room);
   }
@@ -102,7 +102,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("leave", (room: string) => {
-    socket.data.room = "default";
+    socket.data.room = "Default";
     sessionStore.saveSession(socket.data.sessionID!, socket.data as SocketData);
     socket.leave(room);
     io.emit("rooms", getRooms());
