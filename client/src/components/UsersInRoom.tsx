@@ -5,18 +5,31 @@ interface UsersInRoomProps {
   room: string;
 }
 
-const UsersInRoom: React.FC<UsersInRoomProps> = ({ room }) => {
+const UsersInRoom: React.FC<UsersInRoomProps> = ({
+  room,
+}: UsersInRoomProps) => {
   const [users, setUsers] = useState<string[]>([]);
   const { socket } = useSocket();
 
   useEffect(() => {
     if (socket) {
-      socket.on("usersInRoom", (roomUsers: string[]) => {
-        setUsers(roomUsers);
-      });
+      const handleUsersInRooms = (usersInRooms: {
+        [room: string]: string[];
+      }) => {
+        const usersInCurrentRoom = usersInRooms[room] || [];
+        setUsers((prevUsers) => {
+          // Filtrera ut users som redan finns
+          const newUsers = usersInCurrentRoom.filter(
+            (user) => !prevUsers.includes(user)
+          );
+          // Lägg till nya användare i listan
+          return [...prevUsers, ...newUsers];
+        });
+      };
+      socket.on("usersInRooms", handleUsersInRooms);
 
       return () => {
-        socket.off("usersInRoom");
+        socket.off("usersInRooms", handleUsersInRooms);
       };
     }
   }, [room, socket]);
