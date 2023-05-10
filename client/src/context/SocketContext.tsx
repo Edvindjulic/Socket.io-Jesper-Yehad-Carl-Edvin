@@ -27,6 +27,8 @@ interface ContextValues {
   >;
   usernameAlreadySelected: boolean;
   setUsernameAlreadySelected: (value: boolean) => void;
+  setCurrentRoom: React.Dispatch<React.SetStateAction<string>>;
+  username: string;
 }
 
 const SocketContext = createContext<ContextValues>(null as any);
@@ -44,6 +46,7 @@ function SocketProvider({ children }: PropsWithChildren) {
     [room: string]: Message[];
   }>({});
   const [usernameAlreadySelected, setUsernameAlreadySelected] = useState(false);
+  const [username, setUsername] = useState<string>("");
 
   const joinRoom = (room: string) => {
     socket.emit("leave", currentRoom);
@@ -122,7 +125,7 @@ function SocketProvider({ children }: PropsWithChildren) {
       socket.off("rooms", rooms);
       socket.off("allMessages", allMessages);
     };
-  }, []);
+  });
 
   return (
     <SocketContext.Provider
@@ -139,6 +142,7 @@ function SocketProvider({ children }: PropsWithChildren) {
         setAllMessageHistory,
         usernameAlreadySelected,
         setUsernameAlreadySelected,
+        setCurrentRoom,
       }}
     >
       {children}
