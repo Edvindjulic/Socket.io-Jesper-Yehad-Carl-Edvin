@@ -2,6 +2,7 @@ import { Server } from "socket.io";
 import type {
   ClientToServerEvents,
   InterServerEvents,
+  PrivateMessage,
   ServerToClientEvents,
   SocketData,
 } from "./communication";
@@ -17,6 +18,7 @@ const io = new Server<
 >();
 const allMessages: { [room: string]: { username: string; message: string }[] } =
   {};
+const allPrivateMessages: PrivateMessage[] = [];
 
 // Exempel från socket.io
 io.use((socket, next) => {
@@ -67,6 +69,16 @@ io.on("connection", (socket) => {
     allMessages[room].push({ username: socket.data.username!, message });
     io.emit("allMessages", allMessages); // Add this line
     console.log(allMessages);
+  });
+
+  socket.on("pm", ({ msg, to }) => {
+    const privateMessage: PrivateMessage = {
+      msg,
+      from: socket.data.userID,
+      to,
+    };
+    socket.to(to!).to(socket.data.userID!).emit("pm", privateMessage);
+    allPrivateMessages.push(privateMessage);
   });
 
   socket.on("join", (room: string, ack?: () => void) => {

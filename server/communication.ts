@@ -4,6 +4,7 @@ export interface ServerToClientEvents {
   allMessages: (allMessages: { [room: string]: Message[] }) => void;
   typing: (username: string, isTyping: boolean) => void;
   session: (session: SocketData) => void;
+  pm: (message: PrivateMessage) => void;
 }
 
 export interface ClientToServerEvents {
@@ -14,6 +15,7 @@ export interface ClientToServerEvents {
   userLeft: (username: string) => void;
   allRooms: (rooms: string[]) => void;
   typing: (room: string, isTyping: boolean) => void;
+  pm: (message: PrivateMessage) => void;
 }
 
 export interface InterServerEvents {
@@ -30,4 +32,10 @@ export interface SocketData {
 export interface Message {
   username: string;
   message: string;
+}
+
+export interface PrivateMessage {
+  msg: string;
+  from: string | undefined;
+  to: string | undefined;
 }
