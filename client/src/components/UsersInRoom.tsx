@@ -5,7 +5,9 @@ interface UsersInRoomProps {
   room: string;
 }
 
-const UsersInRoom: React.FC<UsersInRoomProps> = ({ room }) => {
+const UsersInRoom: React.FC<UsersInRoomProps> = ({
+  room,
+}: UsersInRoomProps) => {
   const [users, setUsers] = useState<string[]>([]);
   const { socket } = useSocket();
 
