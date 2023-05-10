@@ -6,10 +6,61 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import { useSocket } from "../context/SocketContext";
-import UsersInRoom from "./UsersInRoom";
 
-function Rooms() {
+interface UsersInRoomProps {
+  room: string;
+  username: string;
+}
+
+const UsersInRoom: React.FC<UsersInRoomProps> = ({
+  room,
+  username,
+}: UsersInRoomProps) => {
+  const [users, setUsers] = useState<string[]>([]);
+  const { socket } = useSocket();
+
+  useEffect(() => {
+    if (socket) {
+      const handleUsersInRooms = (usersInRooms: {
+        [room: string]: string[];
+      }) => {
+        const usersInCurrentRoom = usersInRooms[room] || [];
+        setUsers((prevUsers) => {
+          const newUsers = usersInCurrentRoom.filter(
+            (user) => !prevUsers.includes(user)
+          );
+          return [...prevUsers, ...newUsers];
+        });
+      };
+      socket.on("usersInRooms", handleUsersInRooms);
+
+      return () => {
+        socket.off("usersInRooms", handleUsersInRooms);
+      };
+    }
+  }, [room, socket]);
+
+  return (
+    <Box>
+      <ul>
+        {users.map((user) => (
+          <li key={user}>{user}</li>
+        ))}
+      </ul>
+      <p>Username: {username}</p>
+    </Box>
+  );
+};
+
+interface RoomsProps {
+  setSelectedRoom: React.Dispatch<React.SetStateAction<string>>;
+  onRoomSelection: (room: string) => void;
+  username: string;
+}
+
+const Rooms: React.FC<RoomsProps> = ({ username }: RoomsProps) => {
   const { currentRoom, joinRoom, listOfRooms, leaveRoom } = useSocket();
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -34,7 +85,7 @@ function Rooms() {
         Rooms
       </Typography>
       <Divider sx={{ backgroundColor: "#7D99B4" }} />
-      <UsersInRoom room={currentRoom} />
+      <UsersInRoom room={currentRoom || ""} username={username} />
       <Typography variant="h6" sx={{ textAlign: "center", marginTop: "1rem" }}>
         Current room is {currentRoom}
       </Typography>
@@ -104,6 +155,6 @@ function Rooms() {
       </Box>
     </Box>
   );
-}
+};
 
 export default Rooms;

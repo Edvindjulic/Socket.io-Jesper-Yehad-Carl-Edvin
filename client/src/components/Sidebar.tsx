@@ -1,11 +1,20 @@
 import CssBaseline from "@mui/material/CssBaseline";
 import Drawer from "@mui/material/Drawer";
+import { useState } from "react";
 import Rooms from "./Rooms";
-import UsersInRoom from "./UsersInRoom"; // Import the UsersInRoom component
+import UsersInRoom from "./UsersInRoom";
 
 const drawerWidth = "20vw";
 
-export default function Sidebar() {
+export default function Sidebar({
+  username,
+  onRoomSelection,
+}: {
+  username: string;
+  onRoomSelection: (room: string) => void;
+}) {
+  const [selectedRoom, setSelectedRoom] = useState("");
+
   return (
     <>
       <CssBaseline />
@@ -24,9 +33,14 @@ export default function Sidebar() {
         variant="permanent"
         anchor="left"
       >
-        <Rooms />
-
-        <UsersInRoom />
+        <Rooms
+          setSelectedRoom={setSelectedRoom}
+          onRoomSelection={onRoomSelection}
+          username={username} // Pass the username prop to the Rooms component
+        />
+        {selectedRoom && (
+          <UsersInRoom room={selectedRoom} username={username} />
+        )}
       </Drawer>
     </>
   );

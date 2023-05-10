@@ -7,7 +7,7 @@ import {
   TextareaAutosize,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useSocket } from "../context/SocketContext";
 
 const drawerWidth = "20vw";
@@ -20,18 +20,17 @@ export default function ChatBox() {
   const latestMessageRef = useRef<HTMLLIElement>(null);
   const [typing, setTyping] = useState(false);
 
-  const submitMessage = () => {
+  const submitMessage = useCallback(() => {
     if (message.trim()) {
       sendMessage(message);
       setMessage("");
     }
-  };
+  }, [message, sendMessage]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     submitMessage();
   };
-
   const handleKeyPress = () => {
     if (!typing && currentRoom && message.trim()) {
       socket.emit("typing", currentRoom, true);

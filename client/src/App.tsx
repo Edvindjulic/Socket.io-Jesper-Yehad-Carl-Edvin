@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import { useEffect } from "react";
 import "./App.css";
-import ChatBox from "./components/ChatBox"; // Import ChatBox component
+import ChatBox from "./components/ChatBox";
 import NoRoom from "./components/NoRoom";
 import SelectUsername from "./components/SelectUsername";
 import Sidebar from "./components/Sidebar";
@@ -15,6 +15,8 @@ function App() {
     currentRoom,
     usernameAlreadySelected,
     setUsernameAlreadySelected,
+    setCurrentRoom,
+    username, // Add this line to store the username
   } = useSocket();
 
   useEffect(() => {
@@ -29,6 +31,10 @@ function App() {
       socket.auth = { username };
       socket.connect();
     }
+  };
+
+  const handleRoomSelection = (room: string) => {
+    setCurrentRoom(room);
   };
 
   return (
@@ -51,8 +57,11 @@ function App() {
           >
             {currentRoom === "Default" ? <NoRoom /> : <ChatBox />}
           </Box>
-          <Sidebar />
-          <UsersInRoom />
+          <Sidebar
+            username={username} // Pass the username to Sidebar component
+            onRoomSelection={handleRoomSelection}
+          />
+          <UsersInRoom room={currentRoom || ""} username={username} />
         </Box>
       )}
     </>

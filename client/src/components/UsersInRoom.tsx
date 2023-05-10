@@ -3,10 +3,12 @@ import { useSocket } from "../context/SocketContext";
 
 interface UsersInRoomProps {
   room: string;
+  username: string; // Add the 'username' prop
 }
 
 const UsersInRoom: React.FC<UsersInRoomProps> = ({
   room,
+  username, // Add the 'username' prop here
 }: UsersInRoomProps) => {
   const [users, setUsers] = useState<string[]>([]);
   const { socket } = useSocket();
@@ -18,11 +20,9 @@ const UsersInRoom: React.FC<UsersInRoomProps> = ({
       }) => {
         const usersInCurrentRoom = usersInRooms[room] || [];
         setUsers((prevUsers) => {
-          // Filtrera ut users som redan finns
           const newUsers = usersInCurrentRoom.filter(
             (user) => !prevUsers.includes(user)
           );
-          // Lägg till nya användare i listan
           return [...prevUsers, ...newUsers];
         });
       };
