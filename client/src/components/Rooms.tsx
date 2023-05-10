@@ -7,6 +7,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useSocket } from "../context/SocketContext";
+import UsersInRoom from "./UsersInRoom";
 
 function Rooms() {
   const { currentRoom, joinRoom, listOfRooms, leaveRoom } = useSocket();
@@ -33,6 +34,7 @@ function Rooms() {
         Rooms
       </Typography>
       <Divider sx={{ backgroundColor: "#7D99B4" }} />
+      <UsersInRoom room={currentRoom} />
       <Typography variant="h6" sx={{ textAlign: "center", marginTop: "1rem" }}>
         Current room is {currentRoom}
       </Typography>

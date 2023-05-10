@@ -1,6 +1,7 @@
 import CssBaseline from "@mui/material/CssBaseline";
 import Drawer from "@mui/material/Drawer";
 import Rooms from "./Rooms";
+import UsersInRoom from "./UsersInRoom"; // Import the UsersInRoom component
 
 const drawerWidth = "20vw";
 
@@ -24,6 +25,8 @@ export default function Sidebar() {
         anchor="left"
       >
         <Rooms />
+
+        <UsersInRoom />
       </Drawer>
     </>
   );
