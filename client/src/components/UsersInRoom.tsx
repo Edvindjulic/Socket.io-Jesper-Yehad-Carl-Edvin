@@ -1,47 +1,51 @@
+import { Box, List, ListItem, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useSocket } from "../context/SocketContext";
 
 interface UsersInRoomProps {
   room: string;
-  username: string; // Add the 'username' prop
+  username: string;
 }
 
 const UsersInRoom: React.FC<UsersInRoomProps> = ({
   room,
-  username, // Add the 'username' prop here
+  username,
 }: UsersInRoomProps) => {
   const [users, setUsers] = useState<string[]>([]);
   const { socket } = useSocket();
 
   useEffect(() => {
-    if (socket) {
-      const handleUsersInRooms = (usersInRooms: {
-        [room: string]: string[];
-      }) => {
-        const usersInCurrentRoom = usersInRooms[room] || [];
-        setUsers((prevUsers) => {
-          const newUsers = usersInCurrentRoom.filter(
-            (user) => !prevUsers.includes(user)
-          );
-          return [...prevUsers, ...newUsers];
-        });
-      };
-      socket.on("usersInRooms", handleUsersInRooms);
+    const handleUsersInRooms = (usersInRooms: { [room: string]: string[] }) => {
+      const usersInCurrentRoom = usersInRooms[room] || [];
+      setUsers((prevUsers) => {
+        const newUsers = usersInCurrentRoom.filter(
+          (user) => !prevUsers.includes(user)
+        );
+        return [...prevUsers, ...newUsers];
+      });
+    };
 
-      return () => {
-        socket.off("usersInRooms", handleUsersInRooms);
-      };
+    if (socket) {
+      socket.on("usersInRooms", handleUsersInRooms);
     }
+
+    return () => {
+      if (socket) {
+        socket.off("usersInRooms", handleUsersInRooms);
+      }
+    };
   }, [room, socket]);
 
   return (
-    <div>
-      <ul>
+    <Box>
+      <Typography variant="h6">Users in Room: {room}</Typography>
+      <List>
         {users.map((user) => (
-          <li key={user}>{user}</li>
+          <ListItem key={user}>{user}</ListItem>
         ))}
-      </ul>
-    </div>
+      </List>
+      <Typography variant="body1">Your Username: {username}</Typography>
+    </Box>
   );
 };
 
