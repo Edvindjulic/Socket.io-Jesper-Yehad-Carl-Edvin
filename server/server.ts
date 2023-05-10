@@ -8,6 +8,7 @@ import type {
 import SessionStore from "./sessionStore";
 
 const sessionStore = new SessionStore();
+const usersInRoom: { [room: string]: string[] } = {};
 
 const io = new Server<
   ClientToServerEvents,
@@ -50,8 +51,7 @@ io.on("connection", (socket) => {
   socket.emit("session", socket.data as SocketData);
 
   console.log(`${username} has connected to the server`);
-  /* console.log(socket.data);
-  console.log(sessionStore.findAllSessions()); */
+
   if (socket.data.room && socket.data.room !== "default") {
     socket.join(socket.data.room);
     console.log("I rejoin the", socket.data.room);
@@ -70,7 +70,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("join", (room: string, ack?: () => void) => {
-    console.log("Received   join event from client");
+    console.log("Received join event from client");
     console.log("Ack function:", ack);
 
     console.log("Before", socket.data.room);
@@ -82,10 +82,12 @@ io.on("connection", (socket) => {
     console.log(socket.rooms);
 
     // Store the username in the room
-    if (!usersInRooms[room]) {
-      usersInRooms[room] = [];
+    if (!usersInRoom[room]) {
+      usersInRoom[room] = [];
     }
-    usersInRooms[room].push(username);
+    if (username !== undefined) {
+      usersInRoom[room].push(username);
+    }
 
     if (ack) {
       console.log("Acknowledging client");
@@ -94,7 +96,7 @@ io.on("connection", (socket) => {
 
     // When a user joins a room, send an updated list of rooms and users to everyone
     io.emit("rooms", getRooms());
-    io.emit("usersInRooms", usersInRooms);
+    io.emit("usersInRooms", usersInRoom);
 
     console.log(getRooms());
     socket.emit("allMessages", { [room]: allMessages[room] });
@@ -108,15 +110,15 @@ io.on("connection", (socket) => {
 
     // Remove the username from the room
     const room = Object.keys(socket.rooms)[1];
-    if (usersInRooms[room]) {
-      const index = usersInRooms[room].indexOf(username);
+    if (usersInRoom[room] && username !== undefined) {
+      const index = usersInRoom[room].indexOf(username);
       if (index !== -1) {
-        usersInRooms[room].splice(index, 1);
+        usersInRoom[room].splice(index, 1);
       }
     }
 
     io.emit("rooms", getRooms());
-    io.emit("usersInRooms", usersInRooms);
+    io.emit("usersInRooms", usersInRoom);
 
     console.log(getRooms());
   });
@@ -146,4 +148,5 @@ function getRooms() {
   }
   return roomsFound;
 }
+
 io.listen(3000);
