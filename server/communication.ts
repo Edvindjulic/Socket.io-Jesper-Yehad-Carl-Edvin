@@ -2,9 +2,9 @@ export interface ServerToClientEvents {
   message: (name: string, message: string) => void;
   rooms: (rooms: string[]) => void;
   allMessages: (allMessages: { [room: string]: Message[] }) => void;
+  usersInRooms: (usersInRooms: { [room: string]: string[] }) => void;
   typing: (username: string, isTyping: boolean) => void;
   session: (session: SocketData) => void;
-  usersInRoom: (room: string, users: string[]) => void;
 }
 
 export interface ClientToServerEvents {
