@@ -1,15 +1,21 @@
 import { Box } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import "./App.css";
 import ChatBox from "./components/ChatBox"; // Import ChatBox component
 import NoRoom from "./components/NoRoom";
 import SelectUsername from "./components/SelectUsername";
 import Sidebar from "./components/Sidebar";
+import UsersInRoom from "./components/UsersInRoom";
 import { useSocket } from "./context/SocketContext";
 
 function App() {
-
-  const { socket, setMessages, currentRoom, usernameAlreadySelected, setUsernameAlreadySelected } = useSocket();
+  const {
+    socket,
+    setMessages,
+    currentRoom,
+    usernameAlreadySelected,
+    setUsernameAlreadySelected,
+  } = useSocket();
 
   useEffect(() => {
     if (currentRoom) {
@@ -46,6 +52,7 @@ function App() {
             {currentRoom === "Default" ? <NoRoom /> : <ChatBox />}
           </Box>
           <Sidebar />
+          <UsersInRoom />
         </Box>
       )}
     </>
