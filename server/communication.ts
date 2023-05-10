@@ -39,5 +39,6 @@ export interface User {
   userID: string;
   username: string;
   self: boolean;
+  room: string;
 }
 

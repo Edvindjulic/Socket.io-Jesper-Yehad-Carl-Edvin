@@ -1,6 +1,7 @@
 import CssBaseline from "@mui/material/CssBaseline";
 import Drawer from "@mui/material/Drawer";
 import Rooms from "./Rooms";
+import Users from "./Users";
 
 const drawerWidth = "20vw";
 
@@ -23,6 +24,7 @@ export default function Sidebar() {
         variant="permanent"
         anchor="left"
       >
+        <Users />
         <Rooms />
       </Drawer>
     </>
