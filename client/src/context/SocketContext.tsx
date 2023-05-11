@@ -70,6 +70,15 @@ function SocketProvider({ children }: PropsWithChildren) {
 
   const createPrivateRoom = (to: string) => {
     const from = sessionStorage.getItem("userID");
+    const ids = [Number(from), Number(to)].sort((a, b) => a - b);
+    const sum = "DM-" + ids.join("-");
+    console.log(sum);
+    socket.emit("leave", currentRoom);
+    socket.emit("join", sum, () => {
+      console.log("Received acknowledgement from server");
+      setCurrentRoom(sum);
+    });
+
     console.log("Creating private room", "from:", from, "to:", to);
   };
 

@@ -5,6 +5,7 @@ import type {
   PrivateMessage,
   ServerToClientEvents,
   SocketData,
+  User,
 } from "./communication";
 import SessionStore from "./sessionStore";
 
@@ -80,33 +81,6 @@ io.on("connection", (socket) => {
   }
   io.emit("rooms", getRooms());
 
-  // const messagesPerUser = new Map();
-  // const filteredPrivateMessages = allPrivateMessages.filter(
-  //   ({ from, to }) => from === socket.data.userID || to === socket.data.userID
-  // );
-
-  // filteredPrivateMessages.forEach((message) => {
-  //   const { from, to } = message;
-  //   const otherUser = socket.data.userID === from ? to : from;
-  //   if (messagesPerUser.has(otherUser)) {
-  //     messagesPerUser.get(otherUser).push(message);
-  //   } else {
-  //     messagesPerUser.set(otherUser, [message]);
-  //   }
-  // });
-
-  // sessionStore.findAllSessions().forEach((session) => {
-  //   users.push({
-  //     userID: session.userID,
-  //     username: session.username,
-  //     connected: session.connected,
-  //     messages: messagesPerUser.get(session.userID) || [],
-  //   });
-  // });
-  // socket.emit("users", users);
-  // console.log(users);
-  // Code from example -^
-
   socket.on("message", (room: string, message: string) => {
     io.to(room).emit("message", socket.data.username!, message);
     console.log(room, socket.data.username, message);
@@ -132,10 +106,18 @@ io.on("connection", (socket) => {
     console.log("Received   join event from client");
     console.log("Ack function:", ack);
 
+    // if (room.startsWith("DM")) {
+    //   const [, userA, userB] = room.split("-");
+    //   if (socket.data.userID !== userA || socket.data.userID !== userB) {
+    //     return;
+    //   }
+    // }
+
     console.log("Before", socket.data.room);
     socket.data.room = room;
     sessionStore.saveSession(socket.data.sessionID!, socket.data as SocketData); // Add this line
 
+    // socket.leave();
     socket.join(room);
     console.log("Socket data after set", socket.data.room);
     console.log(socket.rooms);
@@ -189,15 +171,25 @@ io.on("connection", (socket) => {
 
 function getRooms() {
   const { rooms } = io.sockets.adapter;
-  const roomsFound: string[] = [];
+  const roomsFound: string[] = []; // Room[]
 
   for (const [name, setOfSocketIds] of rooms) {
     // An actual real room that we created
     if (!setOfSocketIds.has(name)) {
+      if (name.startsWith("DM")) continue;
       roomsFound.push(name);
+      // roomsFound.push({
+      // name,
+      // users: io.sockets.sockets.find,
+      // });
     }
   }
   return roomsFound;
+}
+
+interface Room {
+  name: string;
+  users: User[];
 }
 
 io.listen(3000);
