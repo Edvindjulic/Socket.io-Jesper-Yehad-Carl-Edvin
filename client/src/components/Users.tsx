@@ -14,6 +14,7 @@ import {
 import { useSocket } from "../context/SocketContext";
 
 export default function Users() {
+
   const { users, currentRoom, createPrivateRoom } = useSocket();
 
   // Filter users based on the current room
