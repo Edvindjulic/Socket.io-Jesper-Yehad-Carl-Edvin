@@ -15,10 +15,8 @@ import {
 import { useSocket } from "../context/SocketContext";
 
 export default function Users() {
-  const { users, currentRoom, createPrivateRoom } = useSocket();
+  const { users, createPrivateRoom } = useSocket();
 
-  // Filter users based on the current room
-  const filteredUsers = users.filter((user) => user.room === currentRoom);
 
   return (
     <Box sx={{ marginBottom: "2rem" }}>
@@ -26,16 +24,16 @@ export default function Users() {
       <Accordion elevation={0}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
+          aria-controls="panel2a-content"
+          id="panel2a-header"
         >
           <Typography variant="subtitle2" sx={{ textAlign: "center" }}>
-            Online Users ({filteredUsers.length})
+            All Users ({users.length})
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
           <List>
-            {filteredUsers.map((user) => (
+            {users.map((user) => (
               <ListItem
                 key={user.userID}
                 sx={{ py: 0 }}

@@ -1,4 +1,5 @@
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+
 import {
   Accordion,
   AccordionDetails,
@@ -13,16 +14,20 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
+
 import { useState } from "react";
+
 import { useSocket } from "../context/SocketContext";
 
 function Rooms() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const isTablet = useMediaQuery(theme.breakpoints.down("md"));
-  const { currentRoom, joinRoom, listOfRooms, leaveRoom } = useSocket();
+  const { currentRoom, joinRoom, listOfRooms, leaveRoom, users } = useSocket();
   const [roomValue, setRoomValue] = useState("");
   const [focused, setFocused] = useState(false);
+  const currentUserID = sessionStorage.getItem("userID");
+  const currentUser = users.find((user) => user.userID === currentUserID);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -31,19 +36,15 @@ function Rooms() {
       setRoomValue("");
     }
   };
-
   const handleRoomClick = (room: string) => {
     joinRoom(room);
   };
-
   const handleRoomChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setRoomValue(e.target.value);
   };
-
   const handleFocus = () => {
     setFocused(true);
   };
-
   const handleBlur = () => {
     setFocused(false);
   };
@@ -54,7 +55,8 @@ function Rooms() {
         variant="h6"
         sx={{ textAlign: "center", padding: "1rem", backgroundColor: "white" }}
       >
-        Rooms
+        You are logged in as{" "}
+        <span style={{ fontWeight: "bold" }}>{currentUser?.username}</span>
       </Typography>
       <Divider sx={{ backgroundColor: "#7D99B4" }} />
       <Accordion elevation={0}>
@@ -63,7 +65,7 @@ function Rooms() {
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
-          <Typography variant="h6" sx={{ textAlign: "center" }}>
+          <Typography variant="body1" sx={{ textAlign: "center" }}>
             Rooms ({listOfRooms.length})
           </Typography>
         </AccordionSummary>
@@ -93,7 +95,6 @@ function Rooms() {
           </List>
         </AccordionDetails>
       </Accordion>
-
       <Divider sx={{ width: "100%", margin: "auto" }} />
       <Box
         sx={{
