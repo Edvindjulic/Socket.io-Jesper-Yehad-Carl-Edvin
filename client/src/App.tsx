@@ -39,7 +39,6 @@ function App() {
         >
           <Box
             sx={{
-              paddingTop: "2rem",
               height: "100%",
             }}
           >
