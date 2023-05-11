@@ -58,7 +58,7 @@ function Rooms() {
         You are logged in as{" "}
         <span style={{ fontWeight: "bold" }}>{currentUser?.username}</span>
       </Typography>
-      <Divider sx={{ width: "100%"}} />
+      <Divider sx={{ width: "100%" }} />
       <Accordion elevation={0}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
@@ -69,12 +69,16 @@ function Rooms() {
             Rooms ({listOfRooms.length})
           </Typography>
         </AccordionSummary>
-        <AccordionDetails sx={{
-          background: "#F1F6F9"
-        }}>
-          <List sx={{
-            padding: 0,
-          }}>
+        <AccordionDetails
+          sx={{
+            background: "#F1F6F9",
+          }}
+        >
+          <List
+            sx={{
+              padding: 0,
+            }}
+          >
             {listOfRooms.map((room, index) => (
               <ListItem
                 key={index}
@@ -83,21 +87,27 @@ function Rooms() {
                   room === currentRoom ? leaveRoom(room) : handleRoomClick(room)
                 }
                 sx={{
-                  '&:hover': {
+                  "&:hover": {
                     background: "none",
                   },
                 }}
               >
                 <Box sx={{ display: "flex", alignItems: "center" }}>
-                  {room === currentRoom ? "🚪 " : "✅ "}
-                  <Typography variant="body1">{room}</Typography>
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      fontWeight: room === currentRoom ? "bold" : "normal",
+                    }}
+                  >
+                    {room}
+                  </Typography>
                 </Box>
               </ListItem>
             ))}
           </List>
         </AccordionDetails>
       </Accordion>
-      <Divider sx={{ width: "100%"}} />
+      <Divider sx={{ width: "100%" }} />
       <Box
         sx={{
           display: "flex",
