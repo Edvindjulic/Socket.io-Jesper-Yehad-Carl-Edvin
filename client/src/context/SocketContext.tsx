@@ -1,10 +1,4 @@
-import {
-  PropsWithChildren,
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { PropsWithChildren, createContext, useContext, useEffect, useState } from "react";
 import { Socket, io } from "socket.io-client";
 import type {
   ClientToServerEvents,
@@ -23,9 +17,7 @@ interface ContextValues {
   socket: Socket;
   listOfRooms: string[];
   allMessageHistory: { [room: string]: Message[] };
-  setAllMessageHistory: React.Dispatch<
-    React.SetStateAction<{ [room: string]: Message[] }>
-  >;
+  setAllMessageHistory: React.Dispatch<React.SetStateAction<{ [room: string]: Message[] }>>;
   usernameAlreadySelected: boolean;
   setUsernameAlreadySelected: (value: boolean) => void;
   users: User[];
@@ -42,7 +34,7 @@ function SocketProvider({ children }: PropsWithChildren) {
     io({ autoConnect: false })
   );
   const [messages, setMessages] = useState<Message[]>([]);
-  const [currentRoom, setCurrentRoom] = useState<string>("Default");
+  const [currentRoom, setCurrentRoom] = useState<string>("Lobby");
   const [listOfRooms, setListOfRooms] = useState<string[]>([]);
   const [allMessageHistory, setAllMessageHistory] = useState<{
     [room: string]: Message[];
@@ -60,7 +52,7 @@ function SocketProvider({ children }: PropsWithChildren) {
 
   const leaveRoom = () => {
     socket.emit("leave", currentRoom);
-    setCurrentRoom("Default");
+    setCurrentRoom("Lobby");
   };
 
   const sendMessage = (message: string) => {
