@@ -9,7 +9,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import React, { useEffect, useRef, useState } from "react";
+import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useSocket } from "../context/SocketContext";
 
 export default function ChatBox() {
@@ -23,6 +23,7 @@ export default function ChatBox() {
     useSocket();
   const latestMessageRef = useRef<HTMLLIElement>(null);
   const [typing, setTyping] = useState(false);
+  const timerRef = useRef<number>();
 
   const submitMessage = () => {
     if (message.trim()) {
@@ -36,18 +37,19 @@ export default function ChatBox() {
     submitMessage();
   };
 
-  const handleKeyPress = () => {
-    if (!typing && currentRoom && message.trim()) {
-      socket.emit("typing", currentRoom, true);
-      setTyping(true);
-    }
-  };
+  const handleMessageChanged = (e: ChangeEvent<HTMLInputElement>) => {
+    setMessage(e.target.value);
 
-  const handleBlur = () => {
-    if (typing) {
-      socket.emit("typing", currentRoom, false);
-      setTyping(false);
+    if (!timerRef.current) {
+      socket.emit("typing", currentRoom, true);
     }
+
+    // debounce
+    clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => {
+      socket.emit("typing", currentRoom, false);
+      timerRef.current = undefined;
+    }, 5000);
   };
 
   useEffect(() => {
@@ -161,15 +163,13 @@ export default function ChatBox() {
             name="message"
             type="text"
             value={message}
-            onChange={(e) => setMessage(e.target.value)}
+            onChange={handleMessageChanged}
             onKeyDown={(e) => {
               if (e.key === "Enter" && !e.shiftKey) {
                 e.preventDefault();
                 submitMessage();
               }
             }}
-            onInput={handleKeyPress}
-            onBlur={handleBlur}
             variant="outlined"
             size="small"
             sx={{

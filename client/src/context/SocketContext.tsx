@@ -30,6 +30,7 @@ interface ContextValues {
   setUsernameAlreadySelected: (value: boolean) => void;
   users: User[];
   setUsers: React.Dispatch<React.SetStateAction<User[]>>;
+  createPrivateRoom: (to: string) => void;
 }
 
 const SocketContext = createContext<ContextValues>(null as any);
@@ -66,17 +67,33 @@ function SocketProvider({ children }: PropsWithChildren) {
     if (!currentRoom) throw Error("Not in a room");
     socket.emit("message", currentRoom, message);
   };
+
+  const createPrivateRoom = (to: string) => {
+    const from = sessionStorage.getItem("userID");
+    const ids = [Number(from), Number(to)].sort((a, b) => a - b);
+    const sum = "DM-" + ids.join("-");
+    console.log(sum);
+    socket.emit("leave", currentRoom);
+    socket.emit("join", sum, () => {
+      console.log("Received acknowledgement from server");
+      setCurrentRoom(sum);
+    });
+
+    console.log("Creating private room", "from:", from, "to:", to);
+  };
+
   useEffect(() => {
     console.log("Updated current room:", currentRoom);
   }, [currentRoom]);
 
   useEffect(() => {
-    socket.on("session", ({ sessionID, room }) => {
+    socket.on("session", ({ sessionID, room, userID }) => {
       // attach the session ID to the next reconnection attempts
       socket.auth = { sessionID };
       // store it in the localStorage
       sessionStorage.setItem("sessionID", sessionID);
       sessionStorage.setItem("room", room);
+      sessionStorage.setItem("userID", userID);
       setCurrentRoom(room);
       console.log(room);
       // save the ID of the user
@@ -165,6 +182,7 @@ function SocketProvider({ children }: PropsWithChildren) {
         setUsernameAlreadySelected,
         users,
         setUsers,
+        createPrivateRoom,
       }}
     >
       {children}
