@@ -10,13 +10,17 @@ import {
   ListItem,
   TextField,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import { useState } from "react";
 import { useSocket } from "../context/SocketContext";
 
 function Rooms() {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isTablet = useMediaQuery(theme.breakpoints.down("md"));
   const { currentRoom, joinRoom, listOfRooms, leaveRoom } = useSocket();
-
   const [roomValue, setRoomValue] = useState("");
   const [focused, setFocused] = useState(false);
 
@@ -53,21 +57,14 @@ function Rooms() {
         Rooms
       </Typography>
       <Divider sx={{ backgroundColor: "#7D99B4" }} />
-      <Typography variant="h6" sx={{ textAlign: "center", marginTop: "1rem" }}>
-        Current room is {currentRoom}
-      </Typography>
-      <Typography variant="body1" sx={{ textAlign: "center" }}>
-        Detta är de rum som finns:
-      </Typography>
-
-      <Accordion>
+      <Accordion elevation={0}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
           <Typography variant="h6" sx={{ textAlign: "center" }}>
-            All Rooms ({listOfRooms.length})
+            Rooms ({listOfRooms.length})
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
@@ -97,13 +94,13 @@ function Rooms() {
         </AccordionDetails>
       </Accordion>
 
-      <Divider sx={{ width: "80%", margin: "auto" }} />
+      <Divider sx={{ width: "100%", margin: "auto" }} />
       <Box
         sx={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          marginTop: "2rem",
+          marginTop: "1rem",
         }}
       >
         <Box
@@ -131,6 +128,8 @@ function Rooms() {
             sx={{
               backgroundColor: "white",
               borderRadius: "4px",
+              marginBottom: "0.5rem",
+              width: isMobile || isTablet ? "100%" : "90%",
               "& .MuiOutlinedInput-notchedOutline": {
                 borderColor: "#7D99B4",
                 borderWidth: "2px",
@@ -173,9 +172,10 @@ function Rooms() {
             component="button"
             type="submit"
             sx={{
-              width: "90%",
+              width: isMobile || isTablet ? "100%" : "90%",
               textAlign: "center",
-              padding: "0.5rem",
+              padding: "0.2rem",
+              marginBottom: "1rem",
               border: "none",
               backgroundColor: "#57B49F",
               color: "white",
