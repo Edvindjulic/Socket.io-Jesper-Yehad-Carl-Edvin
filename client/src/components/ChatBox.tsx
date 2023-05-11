@@ -20,14 +20,7 @@ export default function ChatBox() {
   const [message, setMessage] = useState("");
   const [typingUsers, setTypingUsers] = useState<string[]>([]);
 
-  const {
-    socket,
-    sendMessage,
-    messages,
-    currentRoom,
-    allMessageHistory,
-    users,
-  } = useSocket();
+  const { socket, sendMessage, messages, currentRoom, allMessageHistory, users } = useSocket();
 
   const latestMessageRef = useRef<HTMLLIElement>(null);
   const [typing, setTyping] = useState(false);
@@ -100,14 +93,14 @@ export default function ChatBox() {
         const otherUserName = otherUser ? otherUser.username : "Unknown";
         return (
           <span>
-            DM with <span style={{ fontWeight: "bold" }}>{otherUserName}</span>{" "}
+            Private conversation with <span style={{ fontWeight: "bold" }}>{otherUserName}</span>{" "}
           </span>
         );
       }
     } else {
       return (
         <span>
-          Chat in <span style={{ fontWeight: "bold" }}>{currentRoom}</span> room
+          Currently in <span style={{ fontWeight: "bold" }}>{currentRoom}</span>
         </span>
       );
     }
@@ -133,9 +126,7 @@ export default function ChatBox() {
           backgroundColor: "#4C79B5",
         }}
       >
-
         {getChatHeader()}
-
       </Typography>
       <Box
         sx={{

@@ -23,7 +23,7 @@ export default function NoRoom() {
           backgroundColor: "#4C79B5",
         }}
       >
-        Please join a room to start chatting!
+        Please create or join a room to start chatting
       </Typography>
     </Box>
   );
