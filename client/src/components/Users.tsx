@@ -48,7 +48,13 @@ export default function Users() {
                 </ListItemIcon>
                 <ListItemText
                   primary={user.username}
-                  secondary={`Room: ${user.room}`}
+                  secondary={
+                    user.room === "Default"
+                      ? "No room"
+                      : user.room.includes("DM-")
+                      ? "User in a DM"
+                      : `Room: ${user.room}`
+                  }
                 />
               </ListItem>
             ))}
@@ -83,7 +89,13 @@ export default function Users() {
                 </ListItemIcon>
                 <ListItemText
                   primary={user.username}
-                  secondary={`Room: ${user.room}`}
+                  secondary={
+                    user.room === "Default"
+                      ? "No room"
+                      : user.room.includes("DM-")
+                      ? "User in a DM"
+                      : `Room: ${user.room}`
+                  }
                 />
               </ListItem>
             ))}
