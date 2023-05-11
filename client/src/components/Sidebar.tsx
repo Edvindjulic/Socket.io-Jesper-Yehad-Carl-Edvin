@@ -2,6 +2,9 @@ import { useState } from "react";
 import CssBaseline from "@mui/material/CssBaseline";
 import Drawer from "@mui/material/Drawer";
 import Rooms from "./Rooms";
+import Users from "./Users";
+
+
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import IconButton from "@mui/material/IconButton";
@@ -76,6 +79,7 @@ export default function Sidebar() {
         onClose={isMobile ? handleDrawerToggle : isTablet ? handleDrawerToggle : undefined}
         ModalProps={{ keepMounted: true }}
       >
+        <Users />
         <Rooms />
       </Drawer>
     </>
