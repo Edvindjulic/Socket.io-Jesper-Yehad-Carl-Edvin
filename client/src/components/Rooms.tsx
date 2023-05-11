@@ -17,7 +17,7 @@ import {
 
 import { useState } from "react";
 
-import { MeetingRoom } from "@mui/icons-material";
+import MessageOutlinedIcon from '@mui/icons-material/MessageOutlined';
 import { useSocket } from "../context/SocketContext";
 
 function Rooms() {
@@ -101,19 +101,22 @@ function Rooms() {
                     verticalAlign: "middle",
                   }}
                 >
+                  <MessageOutlinedIcon
+                    sx={{
+                      padding: 0,
+                      marginTop: 0,
+                      marginRight: "0.2rem", // Add margin to create space between the icon and text
+                      fontSize: "18px"
+                    }}
+                  />
                   <Typography
                     variant="body1"
                     sx={{
-                      backgroundColor: "red",
-
-                      verticalAlign: "middle",
-
                       fontWeight: room === currentRoom ? "bold" : "normal",
+                      display: "flex", // Add display:flex to align items vertically
+                      alignItems: "center", // Vertically center the text
                     }}
                   >
-                    <MeetingRoom sx={{ padding: 0, margin: 0 }} />
-                    {/* <NoMeetingRoom /> */}
-
                     {room}
                   </Typography>
                 </Box>

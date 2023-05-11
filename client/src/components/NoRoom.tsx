@@ -39,7 +39,8 @@ export default function NoRoom() {
         marginRight: "1rem"
       }}>
         <Box sx={{
-          maxWidth: "370px"
+          maxWidth: "370px",
+          marginBottom: "1rem"
         }}>
           <Typography variant="h4" sx={{
              textAlign: "center",
