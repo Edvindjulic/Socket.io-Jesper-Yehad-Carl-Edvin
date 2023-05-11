@@ -120,6 +120,7 @@ io.on("connection", (socket) => {
 
     // socket.leave();
     socket.join(room);
+
     console.log("Socket data after set", socket.data.room);
     console.log(socket.rooms);
     if (ack) {
@@ -131,6 +132,17 @@ io.on("connection", (socket) => {
     io.emit("rooms", getRooms());
     console.log(getRooms());
     socket.emit("allMessages", { [room]: allMessages[room] });
+    const users: SocketData[] = [];
+    for (let [id, socket] of io.of("/").sockets) {
+      users.push({
+        userID: socket.data.userID!,
+        username: socket.data.username!,
+        sessionID: socket.data.sessionID!,
+        room: socket.data.room!,
+      });
+    }
+
+    io.emit("users", users);
   });
 
   // When a new user joins, send them the list of rooms
@@ -162,6 +174,18 @@ io.on("connection", (socket) => {
     socket.leave(room);
     io.emit("rooms", getRooms());
     console.log(`${username} has left the room ${room}`);
+
+    const users: SocketData[] = [];
+    for (let [id, socket] of io.of("/").sockets) {
+      users.push({
+        userID: socket.data.userID!,
+        username: socket.data.username!,
+        sessionID: socket.data.sessionID!,
+        room: socket.data.room!,
+      });
+    }
+
+    io.emit("users", users);
     // io.to(room).emit("userLeft", `${username} has left the room ${room}`);
   });
 
