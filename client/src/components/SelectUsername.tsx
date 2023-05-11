@@ -12,6 +12,7 @@ export default function SelectUsername({ onInput }: SelectUsernameProps) {
   const handleUsernameSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (username.trim()) {
+      console.log(username);
       onInput(username);
     }
   };
