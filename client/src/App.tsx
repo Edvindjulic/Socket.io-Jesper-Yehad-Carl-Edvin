@@ -40,6 +40,7 @@ function App() {
           <Box
             sx={{
               height: "100%",
+              paddingTop: "1rem",
             }}
           >
             {currentRoom === "Default" ? <NoRoom /> : <ChatBox />}
