@@ -1,27 +1,42 @@
 import {
   Box,
   Divider,
+  InputLabel,
   List,
   ListItem,
   TextField,
   Typography,
 } from "@mui/material";
+import { useState } from "react";
 import { useSocket } from "../context/SocketContext";
 
 function Rooms() {
   const { currentRoom, joinRoom, listOfRooms, leaveRoom } = useSocket();
+  const [roomValue, setRoomValue] = useState("");
+  const [focused, setFocused] = useState(false);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const roomInput = e.currentTarget.elements.namedItem(
-      "room"
-    ) as HTMLInputElement;
-    const room = roomInput.value;
-    joinRoom(room);
+    if (roomValue.trim()) {
+      joinRoom(roomValue);
+      setRoomValue(""); // Reset the TextField value after joining the room
+    }
   };
 
   const handleRoomClick = (room: string) => {
     joinRoom(room);
+  };
+
+  const handleRoomChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setRoomValue(e.target.value);
+  };
+
+  const handleFocus = () => {
+    setFocused(true);
+  };
+
+  const handleBlur = () => {
+    setFocused(false);
   };
 
   return (
@@ -74,37 +89,60 @@ function Rooms() {
             alignItems: "center",
           }}
         >
-         <TextField
-  label="Name the room"
-  name="room"
-  InputLabelProps={{
-    shrink: false,
-    sx: {
-      "&.Mui-focused": {
-        display: "none",
-      },
-    },
-  }}
-  sx={{
-    mb: 1,
-    width: "90%",
-    "& .MuiOutlinedInput-root": {
-      "& fieldset": {
-        borderWidth: "2px",
-      },
-      "&.Mui-focused fieldset": {
-        borderWidth: "2px",
-        borderColor: "#7D99B4",
-      },
-      "&:hover fieldset": {
-        borderColor: "#7D99B4",
-      },
-    },
-  }}
-  variant="outlined"
-/>
-
-
+          <TextField
+            value={roomValue}
+            onChange={handleRoomChange}
+            InputLabelProps={{
+              shrink: focused || roomValue !== "",
+              sx: {
+                "&.Mui-focused": {
+                  display: "none",
+                },
+              },
+            }}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            sx={{
+              backgroundColor: "white",
+              borderRadius: "4px",
+              marginBottom: "1rem",
+              "& .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#7D99B4",
+                borderWidth: "2px",
+              },
+              "& .MuiOutlinedInput-notchedOutline.Mui-focused": {
+                borderColor: "#7D99B4",
+                borderWidth: "2px",
+              },
+              "& .MuiOutlinedInput-input": {
+                borderRadius: "4px",
+                borderColor: "#7D99B4",
+              },
+              "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline":
+                {
+                  borderColor: "#7D99B4",
+                },
+              position: "relative",
+            }}
+            variant="outlined"
+            InputProps={{
+              startAdornment:
+                !roomValue && !focused ? (
+                  <InputLabel
+                    sx={{
+                      position: "absolute",
+                      top: "50%",
+                      left: "50%",
+                      transform: "translate(-50%, -50%)",
+                      pointerEvents: "none",
+                      color: "#C7C7C7",
+                    }}
+                  >
+                    Name the room
+                  </InputLabel>
+                ) : null,
+            }}
+          />
 
           <Typography
             variant="body1"
