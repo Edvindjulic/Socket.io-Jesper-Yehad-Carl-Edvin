@@ -19,8 +19,14 @@ export default function ChatBox() {
 
   const [message, setMessage] = useState("");
   const [typingUsers, setTypingUsers] = useState<string[]>([]);
-  const { socket, sendMessage, messages, currentRoom, allMessageHistory } =
-    useSocket();
+  const {
+    socket,
+    sendMessage,
+    messages,
+    currentRoom,
+    allMessageHistory,
+    users,
+  } = useSocket();
   const latestMessageRef = useRef<HTMLLIElement>(null);
   const [typing, setTyping] = useState(false);
   const timerRef = useRef<number>();
@@ -77,6 +83,34 @@ export default function ChatBox() {
     };
   }, [socket]);
 
+  const getChatHeader = () => {
+    const CurrentUserID = sessionStorage.getItem("userID");
+    const roomPattern = /DM-(\d+)-(\d+)/;
+    const match = currentRoom!.match(roomPattern);
+
+    if (match) {
+      const [, firstID, secondID] = match;
+      if (firstID === CurrentUserID && secondID === CurrentUserID) {
+        return "You're chatting with yourself";
+      } else {
+        const otherUserID = firstID === CurrentUserID ? secondID : firstID;
+        const otherUser = users.find((user) => user.userID === otherUserID);
+        const otherUserName = otherUser ? otherUser.username : "Unknown";
+        return (
+          <span>
+            DM with <span style={{ fontWeight: "bold" }}>{otherUserName}</span>{" "}
+          </span>
+        );
+      }
+    } else {
+      return (
+        <span>
+          Chat in <span style={{ fontWeight: "bold" }}>{currentRoom}</span> room
+        </span>
+      );
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -97,7 +131,7 @@ export default function ChatBox() {
           backgroundColor: "#4C79B5",
         }}
       >
-        Chat in <span style={{ fontWeight: "bold" }}>{currentRoom}</span> room
+        {getChatHeader()}
       </Typography>
       <Box
         sx={{
