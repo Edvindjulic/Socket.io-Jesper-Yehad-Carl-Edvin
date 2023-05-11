@@ -11,14 +11,8 @@ import SessionStore from "./sessionStore";
 
 const sessionStore = new SessionStore();
 
-const io = new Server<
-  ClientToServerEvents,
-  ServerToClientEvents,
-  InterServerEvents,
-  SocketData
->();
-const allMessages: { [room: string]: { username: string; message: string }[] } =
-  {};
+const io = new Server<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>();
+const allMessages: { [room: string]: { username: string; message: string }[] } = {};
 const allPrivateMessages: PrivateMessage[] = [];
 
 // Exempel från socket.io
@@ -43,7 +37,7 @@ io.use((socket, next) => {
   socket.data.sessionID = Date.now().toString();
   socket.data.userID = Date.now().toString();
   socket.data.username = username;
-  socket.data.room = "Default";
+  socket.data.room = "Lobby";
   sessionStore.saveSession(socket.data.sessionID, socket.data as SocketData);
   next();
 });
@@ -76,7 +70,7 @@ io.on("connection", (socket) => {
   console.log(`${username} has connected to the server`);
   /* console.log(socket.data);
   console.log(sessionStore.findAllSessions()); */
-  if (socket.data.room && socket.data.room !== "Default") {
+  if (socket.data.room && socket.data.room !== "Lobby") {
     socket.join(socket.data.room);
     console.log("I rejoin the", socket.data.room);
   }
@@ -170,7 +164,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("leave", (room: string) => {
-    socket.data.room = "Default";
+    socket.data.room = "Lobby";
     sessionStore.saveSession(socket.data.sessionID!, socket.data as SocketData);
     socket.leave(room);
     io.emit("rooms", getRooms());

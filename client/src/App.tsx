@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import "./App.css";
 import ChatBox from "./components/ChatBox"; // Import ChatBox component
 import NoRoom from "./components/NoRoom";
@@ -8,8 +8,8 @@ import Sidebar from "./components/Sidebar";
 import { useSocket } from "./context/SocketContext";
 
 function App() {
-
-  const { socket, setMessages, currentRoom, usernameAlreadySelected, setUsernameAlreadySelected } = useSocket();
+  const { socket, setMessages, currentRoom, usernameAlreadySelected, setUsernameAlreadySelected } =
+    useSocket();
 
   useEffect(() => {
     if (currentRoom) {
@@ -42,7 +42,7 @@ function App() {
               height: "100%",
             }}
           >
-            {currentRoom === "Default" ? <NoRoom /> : <ChatBox />}
+            {currentRoom === "Lobby" ? <NoRoom /> : <ChatBox />}
           </Box>
           <Sidebar />
         </Box>

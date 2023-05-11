@@ -40,14 +40,14 @@ export default function NoRoom() {
           }}
         >
           <Typography
-            variant="h4"
+            variant="h2"
             sx={{
               textAlign: "center",
               fontWeight: "bold",
               fontSize: titleFontSize,
             }}
           >
-            Ready to join the conversation?
+            Ready to chat?
           </Typography>
         </Box>
         <Box

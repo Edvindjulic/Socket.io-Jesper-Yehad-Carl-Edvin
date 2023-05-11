@@ -100,7 +100,7 @@ export default function ChatBox() {
     } else {
       return (
         <span>
-          Currently in <span style={{ fontWeight: "bold" }}>{currentRoom}</span>
+          Currently chatting in <span style={{ fontWeight: "bold" }}>{currentRoom}</span>
         </span>
       );
     }

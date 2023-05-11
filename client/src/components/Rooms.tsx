@@ -53,11 +53,10 @@ function Rooms() {
         Rooms
       </Typography>
       <Divider sx={{ backgroundColor: "#7D99B4" }} />
-      <Typography variant="h6" sx={{ textAlign: "center", marginTop: "1rem" }}>
-        Current room is {currentRoom}
-      </Typography>
-      <Typography variant="body1" sx={{ textAlign: "center" }}>
-        Detta är de rum som finns:
+      <Typography variant="body1" sx={{ textAlign: "center", marginTop: "0.4rem" }}>
+        {listOfRooms.length === 0
+          ? "no active rooms"
+          : `${listOfRooms.length} ${listOfRooms.length === 1 ? "active room" : " active rooms"}`}
       </Typography>
 
       <Accordion>
@@ -82,7 +81,6 @@ function Rooms() {
                     cursor: "pointer",
                   },
                 }}
-                button
                 onClick={() => (room === currentRoom ? leaveRoom(room) : handleRoomClick(room))}
               >
                 <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -182,7 +180,7 @@ function Rooms() {
               },
             }}
           >
-            Create new room
+            Join/Create room
           </Typography>
         </Box>
       </Box>

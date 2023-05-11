@@ -28,7 +28,9 @@ export default function Users() {
           id="panel1a-header"
         >
           <Typography variant="subtitle2" sx={{ textAlign: "center" }}>
-            Users online ({filteredUsers.length})
+            <Typography variant="subtitle2" sx={{ textAlign: "center" }}>
+              {currentRoom === "default" ? "" : `Users in ${currentRoom} (${filteredUsers.length})`}
+            </Typography>
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
@@ -46,7 +48,7 @@ export default function Users() {
                 <ListItemText
                   primary={user.username}
                   secondary={
-                    user.room === "Default"
+                    user.room === "Lobby"
                       ? "No room"
                       : user.room.includes("DM-")
                       ? "User in a DM"
