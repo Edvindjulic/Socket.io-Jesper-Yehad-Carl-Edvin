@@ -1,9 +1,15 @@
-import { List, ListItem, ListItemText, Typography, ListItemIcon } from "@mui/material";
+import CircleTwoToneIcon from "@mui/icons-material/CircleTwoTone";
+import {
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Typography,
+} from "@mui/material";
 import { useSocket } from "../context/SocketContext";
-import CircleTwoToneIcon from '@mui/icons-material/CircleTwoTone';
 
 export default function Users() {
-  const { users } = useSocket();
+  const { users, createPrivateRoom } = useSocket();
 
   return (
     <>
@@ -17,9 +23,14 @@ export default function Users() {
       </Typography>
       <List>
         {users.map((user) => (
-          <ListItem key={user.userID} sx={{py: 0}}>
+          <ListItem
+            key={user.userID}
+            sx={{ py: 0 }}
+            button
+            onClick={() => createPrivateRoom(user.userID)}
+          >
             <ListItemIcon>
-              <CircleTwoToneIcon fontSize="small" sx={{ color: '#57B49F' }} />
+              <CircleTwoToneIcon fontSize="small" sx={{ color: "#57B49F" }} />
             </ListItemIcon>
             <ListItemText
               primary={user.username}

@@ -2,8 +2,10 @@ import { Server } from "socket.io";
 import type {
   ClientToServerEvents,
   InterServerEvents,
+  PrivateMessage,
   ServerToClientEvents,
   SocketData,
+  User,
 } from "./communication";
 import SessionStore from "./sessionStore";
 
@@ -17,6 +19,7 @@ const io = new Server<
 >();
 const allMessages: { [room: string]: { username: string; message: string }[] } =
   {};
+const allPrivateMessages: PrivateMessage[] = [];
 
 // Exempel från socket.io
 io.use((socket, next) => {
@@ -40,7 +43,7 @@ io.use((socket, next) => {
   socket.data.sessionID = Date.now().toString();
   socket.data.userID = Date.now().toString();
   socket.data.username = username;
-  socket.data.room = "default";
+  socket.data.room = "Default";
   sessionStore.saveSession(socket.data.sessionID, socket.data as SocketData);
   next();
 });
@@ -72,7 +75,7 @@ io.on("connection", (socket) => {
   console.log(`${username} has connected to the server`);
   /* console.log(socket.data);
   console.log(sessionStore.findAllSessions()); */
-  if (socket.data.room && socket.data.room !== "default") {
+  if (socket.data.room && socket.data.room !== "Default") {
     socket.join(socket.data.room);
     console.log("I rejoin the", socket.data.room);
   }
@@ -89,14 +92,32 @@ io.on("connection", (socket) => {
     console.log(allMessages);
   });
 
+  socket.on("pm", ({ msg, to }) => {
+    const privateMessage: PrivateMessage = {
+      msg,
+      from: socket.data.userID,
+      to,
+    };
+    socket.to(to!).to(socket.data.userID!).emit("pm", privateMessage);
+    allPrivateMessages.push(privateMessage);
+  });
+
   socket.on("join", (room: string, ack?: () => void) => {
     console.log("Received   join event from client");
     console.log("Ack function:", ack);
+
+    // if (room.startsWith("DM")) {
+    //   const [, userA, userB] = room.split("-");
+    //   if (socket.data.userID !== userA || socket.data.userID !== userB) {
+    //     return;
+    //   }
+    // }
 
     console.log("Before", socket.data.room);
     socket.data.room = room;
     sessionStore.saveSession(socket.data.sessionID!, socket.data as SocketData); // Add this line
 
+    // socket.leave();
     socket.join(room);
     console.log("Socket data after set", socket.data.room);
     console.log(socket.rooms);
@@ -134,7 +155,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("leave", (room: string) => {
-    socket.data.room = "default";
+    socket.data.room = "Default";
     sessionStore.saveSession(socket.data.sessionID!, socket.data as SocketData);
     socket.leave(room);
     io.emit("rooms", getRooms());
@@ -150,15 +171,25 @@ io.on("connection", (socket) => {
 
 function getRooms() {
   const { rooms } = io.sockets.adapter;
-  const roomsFound: string[] = [];
+  const roomsFound: string[] = []; // Room[]
 
   for (const [name, setOfSocketIds] of rooms) {
     // An actual real room that we created
     if (!setOfSocketIds.has(name)) {
+      if (name.startsWith("DM")) continue;
       roomsFound.push(name);
+      // roomsFound.push({
+      // name,
+      // users: io.sockets.sockets.find,
+      // });
     }
   }
   return roomsFound;
+}
+
+interface Room {
+  name: string;
+  users: User[];
 }
 
 io.listen(3000);
