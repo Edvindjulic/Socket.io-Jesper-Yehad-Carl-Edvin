@@ -1,16 +1,15 @@
-import { useState } from "react";
 import CssBaseline from "@mui/material/CssBaseline";
 import Drawer from "@mui/material/Drawer";
+import { useState } from "react";
 import Rooms from "./Rooms";
 import Users from "./Users";
 
-
+import CloseIcon from "@mui/icons-material/Close";
+import MenuIcon from "@mui/icons-material/Menu";
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import CloseIcon from "@mui/icons-material/Close";
-import Box from "@mui/material/Box";
 
 export default function Sidebar() {
   const theme = useTheme();
@@ -76,13 +75,18 @@ export default function Sidebar() {
         variant={isMobile || isTablet ? "temporary" : "permanent"}
         anchor="left"
         open={isMobile ? mobileOpen : isTablet ? tabletOpen : undefined}
-        onClose={isMobile ? handleDrawerToggle : isTablet ? handleDrawerToggle : undefined}
+        onClose={
+          isMobile
+            ? handleDrawerToggle
+            : isTablet
+            ? handleDrawerToggle
+            : undefined
+        }
         ModalProps={{ keepMounted: true }}
       >
-        <Users />
         <Rooms />
+        <Users />
       </Drawer>
     </>
   );
 }
-

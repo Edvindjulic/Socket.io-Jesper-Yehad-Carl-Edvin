@@ -51,6 +51,7 @@ io.use((socket, next) => {
 io.on("connection", (socket) => {
   //Exemplet från socket.io med lite ändringar för att passa vår kod
   const users: SocketData[] = [];
+  socket.emit("users", users);
   for (let [id, socket] of io.of("/").sockets) {
     users.push({
       userID: socket.data.userID!,
@@ -140,6 +141,7 @@ io.on("connection", (socket) => {
     // io.emit("leave", `${username} has disconnected from the server`);
 
     const users: SocketData[] = [];
+    io.emit("users", users);
     for (let [id, socket] of io.of("/").sockets) {
       users.push({
         userID: socket.data.userID!,
