@@ -75,54 +75,54 @@ function Rooms() {
             background: "#F1F6F9",
           }}
         >
-          <List
+         <List sx={{ padding: 0 }}>
+  {listOfRooms.map((room, index) => (
+    <>
+      <ListItem
+        key={index}
+        button
+        onClick={() =>
+          room === currentRoom ? leaveRoom(room) : handleRoomClick(room)
+        }
+        sx={{
+          "&:hover": {
+            background: "none",
+          },
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            verticalAlign: "middle",
+          }}
+        >
+          <MessageOutlinedIcon
             sx={{
               padding: 0,
+              marginTop: 0,
+              marginRight: "0.2rem",
+              fontSize: "18px",
+            }}
+          />
+          <Typography
+            variant="body1"
+            sx={{
+              fontWeight: room === currentRoom ? "bold" : "normal",
+              display: "flex",
+              alignItems: "center",
             }}
           >
-            {listOfRooms.map((room, index) => (
-              <ListItem
-                key={index}
-                button
-                onClick={() =>
-                  room === currentRoom ? leaveRoom(room) : handleRoomClick(room)
-                }
-                sx={{
-                  "&:hover": {
-                    background: "none",
-                  },
-                }}
-              >
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    verticalAlign: "middle",
-                  }}
-                >
-                  <MessageOutlinedIcon
-                    sx={{
-                      padding: 0,
-                      marginTop: 0,
-                      marginRight: "0.2rem", // Add margin to create space between the icon and text
-                      fontSize: "18px"
-                    }}
-                  />
-                  <Typography
-                    variant="body1"
-                    sx={{
-                      fontWeight: room === currentRoom ? "bold" : "normal",
-                      display: "flex", // Add display:flex to align items vertically
-                      alignItems: "center", // Vertically center the text
-                    }}
-                  >
-                    {room}
-                  </Typography>
-                </Box>
-              </ListItem>
-            ))}
-          </List>
+            {room}
+          </Typography>
+        </Box>
+      </ListItem>
+      {index < listOfRooms.length - 1 && <Divider />} 
+    </>
+  ))}
+</List>
+
         </AccordionDetails>
       </Accordion>
       <Divider sx={{ width: "100%" }} />

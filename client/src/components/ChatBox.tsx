@@ -119,7 +119,7 @@ export default function ChatBox() {
         alignItems: "center",
         marginLeft: isMobile || isTablet ? 0 : "20vw",
         position: "relative",
-        marginTop: "1rem",
+        marginTop: "1.5rem",
       }}
     >
       <Typography
