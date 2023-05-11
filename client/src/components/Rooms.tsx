@@ -65,7 +65,7 @@ function Rooms() {
             }
           >
             <Box sx={{ display: "flex", alignItems: "center" }}>
-              {room === currentRoom ? "🚪 " : "✅ "}
+              {/* {room === currentRoom ? "🚪 " : "✅ "} */}
               <Typography variant="body1"> {room}</Typography>
             </Box>
           </ListItem>
@@ -90,58 +90,33 @@ function Rooms() {
           }}
         >
           <TextField
-            value={roomValue}
-            onChange={handleRoomChange}
+            label="Name the room"
+            name="room"
             InputLabelProps={{
-              shrink: focused || roomValue !== "",
+              shrink: false,
               sx: {
                 "&.Mui-focused": {
                   display: "none",
                 },
               },
             }}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
             sx={{
-              backgroundColor: "white",
-              borderRadius: "4px",
-              marginBottom: "1rem",
-              "& .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#7D99B4",
-                borderWidth: "2px",
-              },
-              "& .MuiOutlinedInput-notchedOutline.Mui-focused": {
-                borderColor: "#7D99B4",
-                borderWidth: "2px",
-              },
-              "& .MuiOutlinedInput-input": {
-                borderRadius: "4px",
-                borderColor: "#7D99B4",
-              },
-              "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline":
-                {
+              mb: 1,
+              width: "90%",
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  borderWidth: "2px",
+                },
+                "&.Mui-focused fieldset": {
+                  borderWidth: "2px",
                   borderColor: "#7D99B4",
                 },
-              position: "relative",
+                "&:hover fieldset": {
+                  borderColor: "#7D99B4",
+                },
+              },
             }}
             variant="outlined"
-            InputProps={{
-              startAdornment:
-                !roomValue && !focused ? (
-                  <InputLabel
-                    sx={{
-                      position: "absolute",
-                      top: "50%",
-                      left: "50%",
-                      transform: "translate(-50%, -50%)",
-                      pointerEvents: "none",
-                      color: "#C7C7C7",
-                    }}
-                  >
-                    Name the room
-                  </InputLabel>
-                ) : null,
-            }}
           />
 
           <Typography
