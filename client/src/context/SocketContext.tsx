@@ -143,6 +143,7 @@ function SocketProvider({ children }: PropsWithChildren) {
         usernameAlreadySelected,
         setUsernameAlreadySelected,
         setCurrentRoom,
+        username,
       }}
     >
       {children}
