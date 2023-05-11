@@ -81,6 +81,7 @@ io.on("connection", (socket) => {
     console.log("I rejoin the", socket.data.room);
   }
   io.emit("rooms", getRooms());
+  io.emit("allMessages", allMessages); // Add this line
 
   socket.on("message", (room: string, message: string) => {
     io.to(room).emit("message", socket.data.username!, message);
