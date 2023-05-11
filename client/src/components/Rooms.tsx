@@ -51,7 +51,7 @@ function Rooms() {
   };
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column" }}>
+    <Box sx={{ display: "flex", flexDirection: "column", marginTop: "1rem" }}>
       <Typography
         variant="h6"
         sx={{ textAlign: "center", padding: "1rem", backgroundColor: "white" }}
