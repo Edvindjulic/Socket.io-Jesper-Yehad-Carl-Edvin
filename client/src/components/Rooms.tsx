@@ -1,4 +1,16 @@
-import { Box, Divider, InputLabel, List, ListItem, TextField, Typography } from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Box,
+  Divider,
+  InputLabel,
+  List,
+  ListItem,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useState } from "react";
 import { useSocket } from "../context/SocketContext";
 
@@ -41,35 +53,48 @@ function Rooms() {
         Rooms
       </Typography>
       <Divider sx={{ backgroundColor: "#7D99B4" }} />
-      {/* <Typography variant="h6" sx={{ textAlign: "center", marginTop: "1rem" }}>
+      <Typography variant="h6" sx={{ textAlign: "center", marginTop: "1rem" }}>
         Current room is {currentRoom}
-      </Typography> */}
-      <Typography variant="body1" sx={{ textAlign: "center" }}>
-        {listOfRooms.length === 0
-          ? "No active rooms"
-          : `${listOfRooms.length} available ${listOfRooms.length === 1 ? "room" : "rooms"}:`}
       </Typography>
-      <List>
-        {listOfRooms.map((room, index) => (
-          <ListItem
-            key={index}
-            sx={{
-              background: room === currentRoom ? "" : "#a9b4be",
-              "&:hover": {
-                background: room === currentRoom ? "" : "#4C79B5",
-                cursor: "pointer",
-              },
-            }}
-            button
-            onClick={() => (room === currentRoom ? leaveRoom(room) : handleRoomClick(room))}
-          >
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              {room === currentRoom ? "🚪 " : "✅ "}
-              <Typography variant="body1">{room}</Typography>
-            </Box>
-          </ListItem>
-        ))}
-      </List>
+      <Typography variant="body1" sx={{ textAlign: "center" }}>
+        Detta är de rum som finns:
+      </Typography>
+
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+        >
+          <Typography variant="h6" sx={{ textAlign: "center" }}>
+            All Rooms ({listOfRooms.length})
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <List>
+            {listOfRooms.map((room, index) => (
+              <ListItem
+                key={index}
+                sx={{
+                  background: room === currentRoom ? "" : "#a9b4be",
+                  "&:hover": {
+                    background: room === currentRoom ? "" : "#4C79B5",
+                    cursor: "pointer",
+                  },
+                }}
+                button
+                onClick={() => (room === currentRoom ? leaveRoom(room) : handleRoomClick(room))}
+              >
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                  {room === currentRoom ? "🚪 " : "✅ "}
+                  <Typography variant="body1">{room}</Typography>
+                </Box>
+              </ListItem>
+            ))}
+          </List>
+        </AccordionDetails>
+      </Accordion>
+
       <Divider sx={{ width: "80%", margin: "auto" }} />
       <Box
         sx={{
@@ -157,7 +182,7 @@ function Rooms() {
               },
             }}
           >
-            Create/Join room
+            Create new room
           </Typography>
         </Box>
       </Box>

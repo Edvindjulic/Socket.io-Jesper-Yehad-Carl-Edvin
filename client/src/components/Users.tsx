@@ -14,7 +14,6 @@ import {
 import { useSocket } from "../context/SocketContext";
 
 export default function Users() {
-
   const { users, currentRoom, createPrivateRoom } = useSocket();
 
   // Filter users based on the current room
@@ -44,7 +43,54 @@ export default function Users() {
                 <ListItemIcon>
                   <CircleTwoToneIcon fontSize="small" sx={{ color: "#57B49F" }} />
                 </ListItemIcon>
-                <ListItemText primary={user.username} secondary={`Room: ${user.room}`} />
+                <ListItemText
+                  primary={user.username}
+                  secondary={
+                    user.room === "Default"
+                      ? "No room"
+                      : user.room.includes("DM-")
+                      ? "User in a DM"
+                      : `Room: ${user.room}`
+                  }
+                />
+              </ListItem>
+            ))}
+          </List>
+        </AccordionDetails>
+      </Accordion>
+
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel2a-content"
+          id="panel2a-header"
+        >
+          <Typography variant="subtitle2" sx={{ textAlign: "center" }}>
+            All Users ({users.length})
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <List>
+            {users.map((user) => (
+              <ListItem
+                key={user.userID}
+                sx={{ py: 0 }}
+                button
+                onClick={() => createPrivateRoom(user.userID)}
+              >
+                <ListItemIcon>
+                  <CircleTwoToneIcon fontSize="small" sx={{ color: "#57B49F" }} />
+                </ListItemIcon>
+                <ListItemText
+                  primary={user.username}
+                  secondary={
+                    user.room === "Default"
+                      ? "No room"
+                      : user.room.includes("DM-")
+                      ? "User in a DM"
+                      : `Room: ${user.room}`
+                  }
+                />
               </ListItem>
             ))}
           </List>
