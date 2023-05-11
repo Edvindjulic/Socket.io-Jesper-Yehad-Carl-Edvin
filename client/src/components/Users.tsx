@@ -19,7 +19,9 @@ export default function Users() {
 
 
   return (
-    <Box sx={{ marginBottom: "2rem" }}>
+    <Box sx={{
+      marginBottom: "1rem"
+    }}>
       <Divider sx={{ width: "100%", margin: "auto" }} />
       <Accordion elevation={0}>
         <AccordionSummary
@@ -31,12 +33,21 @@ export default function Users() {
             All Users ({users.length})
           </Typography>
         </AccordionSummary>
-        <AccordionDetails>
-          <List>
+        <AccordionDetails sx={{
+          background: "#F1F6F9"
+        }}>
+          <List sx={{
+            padding: 0,
+          }}>
             {users.map((user) => (
               <ListItem
                 key={user.userID}
-                sx={{ py: 0 }}
+                sx={{
+                  padding: 0,
+                  '&:hover': {
+                    background: "none",
+                  },
+                }}
                 button
                 onClick={() => createPrivateRoom(user.userID)}
               >
@@ -61,7 +72,7 @@ export default function Users() {
           </List>
         </AccordionDetails>
       </Accordion>
-      <Divider sx={{ width: "100%", margin: "auto" }} />
+      <Divider sx={{ width: "100%"}} />
     </Box>
   );
 }

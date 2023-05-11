@@ -58,7 +58,7 @@ function Rooms() {
         You are logged in as{" "}
         <span style={{ fontWeight: "bold" }}>{currentUser?.username}</span>
       </Typography>
-      <Divider sx={{ backgroundColor: "#7D99B4" }} />
+      <Divider sx={{ width: "100%"}} />
       <Accordion elevation={0}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
@@ -69,22 +69,24 @@ function Rooms() {
             Rooms ({listOfRooms.length})
           </Typography>
         </AccordionSummary>
-        <AccordionDetails>
-          <List>
+        <AccordionDetails sx={{
+          background: "#F1F6F9"
+        }}>
+          <List sx={{
+            padding: 0,
+          }}>
             {listOfRooms.map((room, index) => (
               <ListItem
                 key={index}
-                sx={{
-                  background: room === currentRoom ? "" : "#a9b4be",
-                  "&:hover": {
-                    background: room === currentRoom ? "" : "#4C79B5",
-                    cursor: "pointer",
-                  },
-                }}
                 button
                 onClick={() =>
                   room === currentRoom ? leaveRoom(room) : handleRoomClick(room)
                 }
+                sx={{
+                  '&:hover': {
+                    background: "none",
+                  },
+                }}
               >
                 <Box sx={{ display: "flex", alignItems: "center" }}>
                   {room === currentRoom ? "🚪 " : "✅ "}
@@ -95,7 +97,7 @@ function Rooms() {
           </List>
         </AccordionDetails>
       </Accordion>
-      <Divider sx={{ width: "100%", margin: "auto" }} />
+      <Divider sx={{ width: "100%"}} />
       <Box
         sx={{
           display: "flex",
