@@ -10,6 +10,7 @@ import { useSocket } from "../context/SocketContext";
 
 export default function Users() {
   const { users, createPrivateRoom } = useSocket();
+  console.log("nu loggar vi ut users:", users);
 
   return (
     <>
