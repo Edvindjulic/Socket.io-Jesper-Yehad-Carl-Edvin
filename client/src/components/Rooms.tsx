@@ -1,4 +1,5 @@
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+
 import {
   Accordion,
   AccordionDetails,
@@ -10,15 +11,23 @@ import {
   ListItem,
   TextField,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
+
 import { useState } from "react";
+
 import { useSocket } from "../context/SocketContext";
 
 function Rooms() {
-  const { currentRoom, joinRoom, listOfRooms, leaveRoom } = useSocket();
-
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isTablet = useMediaQuery(theme.breakpoints.down("md"));
+  const { currentRoom, joinRoom, listOfRooms, leaveRoom, users } = useSocket();
   const [roomValue, setRoomValue] = useState("");
   const [focused, setFocused] = useState(false);
+  const currentUserID = sessionStorage.getItem("userID");
+  const currentUser = users.find((user) => user.userID === currentUserID);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -27,19 +36,15 @@ function Rooms() {
       setRoomValue("");
     }
   };
-
   const handleRoomClick = (room: string) => {
     joinRoom(room);
   };
-
   const handleRoomChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setRoomValue(e.target.value);
   };
-
   const handleFocus = () => {
     setFocused(true);
   };
-
   const handleBlur = () => {
     setFocused(false);
   };
@@ -50,42 +55,38 @@ function Rooms() {
         variant="h6"
         sx={{ textAlign: "center", padding: "1rem", backgroundColor: "white" }}
       >
-        Rooms
+        You are logged in as{" "}
+        <span style={{ fontWeight: "bold" }}>{currentUser?.username}</span>
       </Typography>
-      <Divider sx={{ backgroundColor: "#7D99B4" }} />
-      <Typography variant="h6" sx={{ textAlign: "center", marginTop: "1rem" }}>
-        Current room is {currentRoom}
-      </Typography>
-      <Typography variant="body1" sx={{ textAlign: "center" }}>
-        Detta är de rum som finns:
-      </Typography>
-
-      <Accordion>
+      <Divider sx={{ width: "100%"}} />
+      <Accordion elevation={0}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
-          <Typography variant="h6" sx={{ textAlign: "center" }}>
-            All Rooms ({listOfRooms.length})
+          <Typography variant="body1" sx={{ textAlign: "center" }}>
+            Rooms ({listOfRooms.length})
           </Typography>
         </AccordionSummary>
-        <AccordionDetails>
-          <List>
+        <AccordionDetails sx={{
+          background: "#F1F6F9"
+        }}>
+          <List sx={{
+            padding: 0,
+          }}>
             {listOfRooms.map((room, index) => (
               <ListItem
                 key={index}
-                sx={{
-                  background: room === currentRoom ? "" : "#a9b4be",
-                  "&:hover": {
-                    background: room === currentRoom ? "" : "#4C79B5",
-                    cursor: "pointer",
-                  },
-                }}
                 button
                 onClick={() =>
                   room === currentRoom ? leaveRoom(room) : handleRoomClick(room)
                 }
+                sx={{
+                  '&:hover': {
+                    background: "none",
+                  },
+                }}
               >
                 <Box sx={{ display: "flex", alignItems: "center" }}>
                   {room === currentRoom ? "🚪 " : "✅ "}
@@ -96,14 +97,13 @@ function Rooms() {
           </List>
         </AccordionDetails>
       </Accordion>
-
-      <Divider sx={{ width: "80%", margin: "auto" }} />
+      <Divider sx={{ width: "100%"}} />
       <Box
         sx={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          marginTop: "2rem",
+          marginTop: "1rem",
         }}
       >
         <Box
@@ -131,6 +131,8 @@ function Rooms() {
             sx={{
               backgroundColor: "white",
               borderRadius: "4px",
+              marginBottom: "0.5rem",
+              width: isMobile || isTablet ? "100%" : "90%",
               "& .MuiOutlinedInput-notchedOutline": {
                 borderColor: "#7D99B4",
                 borderWidth: "2px",
@@ -173,9 +175,10 @@ function Rooms() {
             component="button"
             type="submit"
             sx={{
-              width: "90%",
+              width: isMobile || isTablet ? "100%" : "90%",
               textAlign: "center",
-              padding: "0.5rem",
+              padding: "0.2rem",
+              marginBottom: "1rem",
               border: "none",
               backgroundColor: "#57B49F",
               color: "white",
