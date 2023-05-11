@@ -1,4 +1,8 @@
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Box,
   Divider,
   InputLabel,
@@ -55,29 +59,44 @@ function Rooms() {
       <Typography variant="body1" sx={{ textAlign: "center" }}>
         Detta är de rum som finns:
       </Typography>
-      <List>
-        {listOfRooms.map((room, index) => (
-          <ListItem
-            key={index}
-            sx={{
-              background: room === currentRoom ? "" : "#a9b4be",
-              "&:hover": {
-                background: room === currentRoom ? "" : "#4C79B5",
-                cursor: "pointer",
-              },
-            }}
-            button
-            onClick={() =>
-              room === currentRoom ? leaveRoom(room) : handleRoomClick(room)
-            }
-          >
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              {room === currentRoom ? "🚪 " : "✅ "}
-              <Typography variant="body1">{room}</Typography>
-            </Box>
-          </ListItem>
-        ))}
-      </List>
+
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+        >
+          <Typography variant="h6" sx={{ textAlign: "center" }}>
+            All Rooms ({listOfRooms.length})
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <List>
+            {listOfRooms.map((room, index) => (
+              <ListItem
+                key={index}
+                sx={{
+                  background: room === currentRoom ? "" : "#a9b4be",
+                  "&:hover": {
+                    background: room === currentRoom ? "" : "#4C79B5",
+                    cursor: "pointer",
+                  },
+                }}
+                button
+                onClick={() =>
+                  room === currentRoom ? leaveRoom(room) : handleRoomClick(room)
+                }
+              >
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                  {room === currentRoom ? "🚪 " : "✅ "}
+                  <Typography variant="body1">{room}</Typography>
+                </Box>
+              </ListItem>
+            ))}
+          </List>
+        </AccordionDetails>
+      </Accordion>
+
       <Divider sx={{ width: "80%", margin: "auto" }} />
       <Box
         sx={{
