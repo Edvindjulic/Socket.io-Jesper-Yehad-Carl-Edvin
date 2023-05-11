@@ -50,7 +50,7 @@ function Rooms() {
             }
           >
             <Box sx={{ display: "flex", alignItems: "center" }}>
-              {room === currentRoom ? "🚪 " : "✅ "}
+              {/* {room === currentRoom ? "🚪 " : "✅ "} */}
               <Typography variant="body1"> {room}</Typography>
             </Box>
           </ListItem>
@@ -74,37 +74,35 @@ function Rooms() {
             alignItems: "center",
           }}
         >
-         <TextField
-  label="Name the room"
-  name="room"
-  InputLabelProps={{
-    shrink: false,
-    sx: {
-      "&.Mui-focused": {
-        display: "none",
-      },
-    },
-  }}
-  sx={{
-    mb: 1,
-    width: "90%",
-    "& .MuiOutlinedInput-root": {
-      "& fieldset": {
-        borderWidth: "2px",
-      },
-      "&.Mui-focused fieldset": {
-        borderWidth: "2px",
-        borderColor: "#7D99B4",
-      },
-      "&:hover fieldset": {
-        borderColor: "#7D99B4",
-      },
-    },
-  }}
-  variant="outlined"
-/>
-
-
+          <TextField
+            label="Name the room"
+            name="room"
+            InputLabelProps={{
+              shrink: false,
+              sx: {
+                "&.Mui-focused": {
+                  display: "none",
+                },
+              },
+            }}
+            sx={{
+              mb: 1,
+              width: "90%",
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  borderWidth: "2px",
+                },
+                "&.Mui-focused fieldset": {
+                  borderWidth: "2px",
+                  borderColor: "#7D99B4",
+                },
+                "&:hover fieldset": {
+                  borderColor: "#7D99B4",
+                },
+              },
+            }}
+            variant="outlined"
+          />
 
           <Typography
             variant="body1"
