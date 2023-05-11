@@ -14,7 +14,7 @@ import {
 import { useSocket } from "../context/SocketContext";
 
 export default function Users() {
-  const { users, currentRoom } = useSocket();
+  const { users, currentRoom, createPrivateRoom } = useSocket();
 
   // Filter users based on the current room
   const filteredUsers = users.filter((user) => user.room === currentRoom);
@@ -34,7 +34,12 @@ export default function Users() {
         <AccordionDetails>
           <List>
             {filteredUsers.map((user) => (
-              <ListItem key={user.userID} sx={{ py: 0 }}>
+              <ListItem
+                key={user.userID}
+                sx={{ py: 0 }}
+                button
+                onClick={() => createPrivateRoom(user.userID)}
+              >
                 <ListItemIcon>
                   <CircleTwoToneIcon
                     fontSize="small"
