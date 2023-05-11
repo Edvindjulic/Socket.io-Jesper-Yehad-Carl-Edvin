@@ -26,6 +26,7 @@ function App() {
   }, [currentRoom]);
 
   const onUsernameSelection = (username: string) => {
+    console.log(username);
     setUsernameAlreadySelected(true);
     if (socket) {
       socket.auth = { username };
