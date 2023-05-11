@@ -17,6 +17,7 @@ import {
 
 import { useState } from "react";
 
+import { MeetingRoom } from "@mui/icons-material";
 import { useSocket } from "../context/SocketContext";
 
 function Rooms() {
@@ -92,13 +93,27 @@ function Rooms() {
                   },
                 }}
               >
-                <Box sx={{ display: "flex", alignItems: "center" }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    verticalAlign: "middle",
+                  }}
+                >
                   <Typography
                     variant="body1"
                     sx={{
+                      backgroundColor: "red",
+
+                      verticalAlign: "middle",
+
                       fontWeight: room === currentRoom ? "bold" : "normal",
                     }}
                   >
+                    <MeetingRoom sx={{ padding: 0, margin: 0 }} />
+                    {/* <NoMeetingRoom /> */}
+
                     {room}
                   </Typography>
                 </Box>
