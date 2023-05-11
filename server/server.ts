@@ -5,7 +5,6 @@ import type {
   PrivateMessage,
   ServerToClientEvents,
   SocketData,
-  UserData,
 } from "./communication";
 import SessionStore from "./sessionStore";
 
@@ -79,32 +78,31 @@ io.on("connection", (socket) => {
   }
   io.emit("rooms", getRooms());
 
-  const users: UserData[] = [];
-  const messagesPerUser = new Map();
-  const filteredPrivateMessages = allPrivateMessages.filter(
-    ({ from, to }) => from === socket.data.userID || to === socket.data.userID
-  );
+  // const messagesPerUser = new Map();
+  // const filteredPrivateMessages = allPrivateMessages.filter(
+  //   ({ from, to }) => from === socket.data.userID || to === socket.data.userID
+  // );
 
-  filteredPrivateMessages.forEach((message) => {
-    const { from, to } = message;
-    const otherUser = socket.data.userID === from ? to : from;
-    if (messagesPerUser.has(otherUser)) {
-      messagesPerUser.get(otherUser).push(message);
-    } else {
-      messagesPerUser.set(otherUser, [message]);
-    }
-  });
+  // filteredPrivateMessages.forEach((message) => {
+  //   const { from, to } = message;
+  //   const otherUser = socket.data.userID === from ? to : from;
+  //   if (messagesPerUser.has(otherUser)) {
+  //     messagesPerUser.get(otherUser).push(message);
+  //   } else {
+  //     messagesPerUser.set(otherUser, [message]);
+  //   }
+  // });
 
-  sessionStore.findAllSessions().forEach((session) => {
-    users.push({
-      userID: session.userID,
-      username: session.username,
-      connected: session.connected,
-      messages: messagesPerUser.get(session.userID) || [],
-    });
-  });
-  socket.emit("users", users);
-  console.log(users);
+  // sessionStore.findAllSessions().forEach((session) => {
+  //   users.push({
+  //     userID: session.userID,
+  //     username: session.username,
+  //     connected: session.connected,
+  //     messages: messagesPerUser.get(session.userID) || [],
+  //   });
+  // });
+  // socket.emit("users", users);
+  // console.log(users);
   // Code from example -^
 
   socket.on("message", (room: string, message: string) => {
