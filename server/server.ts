@@ -57,7 +57,9 @@ io.on("connection", (socket) => {
     });
   }
   socket.emit("users", users);
-  console.log("users", users);
+
+  // Broadcasta users till alla befintliga users
+  socket.broadcast.emit("users", users);
 
   // Emit exemplet från socket.io
   io.emit("userConnected", {
@@ -115,6 +117,18 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     console.log(`${username} has disconnected from the server`);
     // io.emit("leave", `${username} has disconnected from the server`);
+
+    const users: SocketData[] = [];
+    for (let [id, socket] of io.of("/").sockets) {
+      users.push({
+        userID: socket.data.userID!,
+        username: socket.data.username!,
+        sessionID: socket.data.sessionID!,
+        room: socket.data.room!,
+      });
+    }
+
+    io.emit("users", users);
     io.emit("rooms", getRooms());
     console.log(getRooms());
   });
