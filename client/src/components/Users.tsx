@@ -28,7 +28,7 @@ export default function Users() {
           id="panel1a-header"
         >
           <Typography variant="subtitle2" sx={{ textAlign: "center" }}>
-            Online Users ({filteredUsers.length})
+            Users online ({filteredUsers.length})
           </Typography>
         </AccordionSummary>
         <AccordionDetails>
@@ -41,15 +41,9 @@ export default function Users() {
                 onClick={() => createPrivateRoom(user.userID)}
               >
                 <ListItemIcon>
-                  <CircleTwoToneIcon
-                    fontSize="small"
-                    sx={{ color: "#57B49F" }}
-                  />
+                  <CircleTwoToneIcon fontSize="small" sx={{ color: "#57B49F" }} />
                 </ListItemIcon>
-                <ListItemText
-                  primary={user.username}
-                  secondary={`Room: ${user.room}`}
-                />
+                <ListItemText primary={user.username} secondary={`Room: ${user.room}`} />
               </ListItem>
             ))}
           </List>

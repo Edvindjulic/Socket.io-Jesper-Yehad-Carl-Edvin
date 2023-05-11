@@ -19,8 +19,7 @@ export default function ChatBox() {
 
   const [message, setMessage] = useState("");
   const [typingUsers, setTypingUsers] = useState<string[]>([]);
-  const { socket, sendMessage, messages, currentRoom, allMessageHistory } =
-    useSocket();
+  const { socket, sendMessage, messages, currentRoom, allMessageHistory } = useSocket();
   const latestMessageRef = useRef<HTMLLIElement>(null);
   const [typing, setTyping] = useState(false);
   const timerRef = useRef<number>();
@@ -97,7 +96,7 @@ export default function ChatBox() {
           backgroundColor: "#4C79B5",
         }}
       >
-        Chat in <span style={{ fontWeight: "bold" }}>{currentRoom}</span> room
+        Currently chatting in <span style={{ fontWeight: "bold" }}>{currentRoom}</span>
       </Typography>
       <Box
         sx={{
@@ -137,8 +136,7 @@ export default function ChatBox() {
                 width: "100%",
               }}
             >
-              {typingUsers.join(", ")} {typingUsers.length > 1 ? "are" : "is"}{" "}
-              typing...
+              {typingUsers.join(", ")} {typingUsers.length > 1 ? "are" : "is"} typing...
             </Typography>
           )}
         </Box>
@@ -188,11 +186,10 @@ export default function ChatBox() {
                 borderRadius: "4px",
                 borderColor: "#7D99B4",
               },
-              "& .MuiInputBase-root.Mui-focused .MuiOutlinedInput-notchedOutline":
-                {
-                  borderColor: "#7D99B4",
-                  borderWidth: "2px",
-                },
+              "& .MuiInputBase-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#7D99B4",
+                borderWidth: "2px",
+              },
             }}
           />
           <Button

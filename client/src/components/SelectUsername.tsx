@@ -89,7 +89,7 @@ export default function SelectUsername({ onInput }: SelectUsernameProps) {
                     color: "#C7C7C7",
                   }}
                 >
-                  What's your name?
+                  Enter username
                 </InputLabel>
               ) : null,
           }}

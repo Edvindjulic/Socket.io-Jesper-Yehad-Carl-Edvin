@@ -1,12 +1,4 @@
-import {
-  Box,
-  Divider,
-  InputLabel,
-  List,
-  ListItem,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Divider, InputLabel, List, ListItem, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import { useSocket } from "../context/SocketContext";
 
@@ -49,11 +41,13 @@ function Rooms() {
         Rooms
       </Typography>
       <Divider sx={{ backgroundColor: "#7D99B4" }} />
-      <Typography variant="h6" sx={{ textAlign: "center", marginTop: "1rem" }}>
+      {/* <Typography variant="h6" sx={{ textAlign: "center", marginTop: "1rem" }}>
         Current room is {currentRoom}
-      </Typography>
+      </Typography> */}
       <Typography variant="body1" sx={{ textAlign: "center" }}>
-        Detta är de rum som finns:
+        {listOfRooms.length === 0
+          ? "No active rooms"
+          : `${listOfRooms.length} available ${listOfRooms.length === 1 ? "room" : "rooms"}:`}
       </Typography>
       <List>
         {listOfRooms.map((room, index) => (
@@ -67,9 +61,7 @@ function Rooms() {
               },
             }}
             button
-            onClick={() =>
-              room === currentRoom ? leaveRoom(room) : handleRoomClick(room)
-            }
+            onClick={() => (room === currentRoom ? leaveRoom(room) : handleRoomClick(room))}
           >
             <Box sx={{ display: "flex", alignItems: "center" }}>
               {room === currentRoom ? "🚪 " : "✅ "}
@@ -124,10 +116,9 @@ function Rooms() {
                 borderRadius: "4px",
                 borderColor: "#7D99B4",
               },
-              "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline":
-                {
-                  borderColor: "#7D99B4",
-                },
+              "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#7D99B4",
+              },
               position: "relative",
             }}
             variant="outlined"
@@ -166,7 +157,7 @@ function Rooms() {
               },
             }}
           >
-            Create new room
+            Create/Join room
           </Typography>
         </Box>
       </Box>
