@@ -49,6 +49,24 @@ io.use((socket, next) => {
 });
 
 io.on("connection", (socket) => {
+  //Exemplet från socket.io med lite ändringar för att passa vår kod
+  const users: SocketData[] = [];
+  for (let [id, socket] of io.of("/").sockets) {
+    users.push({
+      userID: socket.data.userID!,
+      username: socket.data.username!,
+      sessionID: socket.data.sessionID!,
+      room: socket.data.room!,
+    });
+  }
+  socket.emit("users", users);
+  console.log("users", users);
+
+  // Emit exemplet från socket.io
+  io.emit("userConnected", {
+    username: socket.data.username!,
+  });
+
   const username = socket.data.username;
   socket.emit("session", socket.data as SocketData);
 

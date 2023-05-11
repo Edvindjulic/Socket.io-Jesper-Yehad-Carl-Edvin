@@ -6,13 +6,17 @@ import {
   TextField,
   TextareaAutosize,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import { useSocket } from "../context/SocketContext";
 
-const drawerWidth = "20vw";
-
 export default function ChatBox() {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isTablet = useMediaQuery(theme.breakpoints.down("md"));
+
   const [message, setMessage] = useState("");
   const [typingUsers, setTypingUsers] = useState<string[]>([]);
   const { socket, sendMessage, messages, currentRoom, allMessageHistory } =
@@ -77,14 +81,15 @@ export default function ChatBox() {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        marginLeft: drawerWidth,
+        marginLeft: isMobile || isTablet ? 0 : "20vw",
         position: "relative",
+        marginTop: "1rem",
       }}
     >
       <Typography
         variant="h6"
         sx={{
-          width: "60vw",
+          width: isMobile ? "90vw" : isTablet ? "80vw" : "60vw",
           padding: "0.5rem",
           textAlign: "center",
           backgroundColor: "#4C79B5",
@@ -94,7 +99,7 @@ export default function ChatBox() {
       </Typography>
       <Box
         sx={{
-          width: "60vw",
+          width: isMobile ? "90vw" : isTablet ? "80vw" : "60vw",
           height: "80vh",
           marginBottom: "1rem",
           overflowY: "auto",

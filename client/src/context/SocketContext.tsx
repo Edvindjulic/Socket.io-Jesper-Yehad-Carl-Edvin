@@ -10,6 +10,7 @@ import type {
   ClientToServerEvents,
   Message,
   ServerToClientEvents,
+  User,
 } from "../../../server/communication.ts";
 
 interface ContextValues {
@@ -27,6 +28,8 @@ interface ContextValues {
   >;
   usernameAlreadySelected: boolean;
   setUsernameAlreadySelected: (value: boolean) => void;
+  users: User[];
+  setUsers: React.Dispatch<React.SetStateAction<User[]>>;
 }
 
 const SocketContext = createContext<ContextValues>(null as any);
@@ -44,6 +47,7 @@ function SocketProvider({ children }: PropsWithChildren) {
     [room: string]: Message[];
   }>({});
   const [usernameAlreadySelected, setUsernameAlreadySelected] = useState(false);
+  const [users, setUsers] = useState<User[]>([]);
 
   const joinRoom = (room: string) => {
     socket.emit("leave", currentRoom);
@@ -94,6 +98,22 @@ function SocketProvider({ children }: PropsWithChildren) {
     function connect() {
       console.log("Connected to server");
     }
+    function userConnected({ username }: { username: string }) {
+      console.log(`${username} has connected to the server`);
+    }
+    function handleUsers(users: any[]) {
+      users.forEach((user) => {
+        user.self = user.userID === socket.id;
+      });
+      setUsers(
+        users.sort((a, b) => {
+          if (a.self) return -1;
+          if (b.self) return 1;
+          if (a.username < b.username) return -1;
+          return a.username > b.username ? 1 : 0;
+        })
+      );
+    }
     function disconnect() {
       console.log("Disconnected from server");
     }
@@ -110,17 +130,21 @@ function SocketProvider({ children }: PropsWithChildren) {
     }
 
     socket.on("connect", connect);
+    socket.on("userConnected", userConnected);
     socket.on("disconnect", disconnect);
     socket.on("message", message);
     socket.on("rooms", rooms);
     socket.on("allMessages", allMessages);
+    socket.on("users", handleUsers);
 
     return () => {
       socket.off("connect", connect);
+      socket.off("userConnected", userConnected);
       socket.off("disconnect", disconnect);
       socket.off("message", message);
       socket.off("rooms", rooms);
       socket.off("allMessages", allMessages);
+      socket.off("users", handleUsers);
     };
   }, []);
 
@@ -139,6 +163,8 @@ function SocketProvider({ children }: PropsWithChildren) {
         setAllMessageHistory,
         usernameAlreadySelected,
         setUsernameAlreadySelected,
+        users,
+        setUsers,
       }}
     >
       {children}
