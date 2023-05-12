@@ -50,7 +50,6 @@ export default function ChatBox() {
       socket.emit("typing", currentRoom, true);
     }
 
-    // debounce
     clearTimeout(timerRef.current);
     timerRef.current = setTimeout(() => {
       socket.emit("typing", currentRoom, false);

@@ -25,7 +25,7 @@ const allPrivateMessages: PrivateMessage[] = [];
 io.use((socket, next) => {
   const sessionID = socket.handshake.auth.sessionID;
   if (sessionID) {
-    // find existing session
+    // Hitta befintlig session
     const session = sessionStore.findSession(sessionID);
     if (session) {
       socket.data.sessionID = sessionID;
@@ -39,7 +39,7 @@ io.use((socket, next) => {
   if (!username) {
     return next(new Error("invalid username"));
   }
-  // create new session
+  // Skapa ny session
   socket.data.sessionID = Date.now().toString();
   socket.data.userID = Date.now().toString();
   socket.data.username = username;
@@ -74,14 +74,13 @@ io.on("connection", (socket) => {
   socket.emit("session", socket.data as SocketData);
 
   console.log(`${username} has connected to the server`);
-  /* console.log(socket.data);
-  console.log(sessionStore.findAllSessions()); */
+
   if (socket.data.room && socket.data.room !== "Default") {
     socket.join(socket.data.room);
     console.log("I rejoin the", socket.data.room);
   }
   io.emit("rooms", getRooms());
-  io.emit("allMessages", allMessages); // Add this line
+  io.emit("allMessages", allMessages);
 
   socket.on("message", (room: string, message: string) => {
     io.to(room).emit("message", socket.data.username!, message);
@@ -90,7 +89,7 @@ io.on("connection", (socket) => {
       allMessages[room] = [];
     }
     allMessages[room].push({ username: socket.data.username!, message });
-    io.emit("allMessages", allMessages); // Add this line
+    io.emit("allMessages", allMessages);
     console.log(allMessages);
   });
 
@@ -108,18 +107,10 @@ io.on("connection", (socket) => {
     console.log("Received   join event from client");
     console.log("Ack function:", ack);
 
-    // if (room.startsWith("DM")) {
-    //   const [, userA, userB] = room.split("-");
-    //   if (socket.data.userID !== userA || socket.data.userID !== userB) {
-    //     return;
-    //   }
-    // }
-
     console.log("Before", socket.data.room);
     socket.data.room = room;
     sessionStore.saveSession(socket.data.sessionID!, socket.data as SocketData); // Add this line
 
-    // socket.leave();
     socket.join(room);
 
     console.log("Socket data after set", socket.data.room);
@@ -129,7 +120,7 @@ io.on("connection", (socket) => {
 
       ack();
     }
-    // When a user joins a room, send an updated list of rooms to everyone
+    // När anändare ansluter skicka uppdaterad lista på rum till alla
     io.emit("rooms", getRooms());
     console.log(getRooms());
     socket.emit("allMessages", { [room]: allMessages[room] });
@@ -146,12 +137,11 @@ io.on("connection", (socket) => {
     io.emit("users", users);
   });
 
-  // When a new user joins, send them the list of rooms
+  // När användare ansluter skicka lista på rum
   socket.emit("rooms", getRooms());
 
   socket.on("disconnect", () => {
     console.log(`${username} has disconnected from the server`);
-    // io.emit("leave", `${username} has disconnected from the server`);
 
     const users: SocketData[] = [];
     io.emit("users", users);
@@ -187,7 +177,6 @@ io.on("connection", (socket) => {
     }
 
     io.emit("users", users);
-    // io.to(room).emit("userLeft", `${username} has left the room ${room}`);
   });
 
   socket.on("typing", (room: string, isTyping: boolean) => {
@@ -198,17 +187,12 @@ io.on("connection", (socket) => {
 
 function getRooms() {
   const { rooms } = io.sockets.adapter;
-  const roomsFound: string[] = []; // Room[]
+  const roomsFound: string[] = [];
 
   for (const [name, setOfSocketIds] of rooms) {
-    // An actual real room that we created
     if (!setOfSocketIds.has(name)) {
       if (name.startsWith("DM")) continue;
       roomsFound.push(name);
-      // roomsFound.push({
-      // name,
-      // users: io.sockets.sockets.find,
-      // });
     }
   }
   return roomsFound;

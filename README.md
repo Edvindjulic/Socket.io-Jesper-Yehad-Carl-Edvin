@@ -1,18 +1,22 @@
-# Något Coolt Namn På Vår Chat
+# Namn
+
+The Chatting-app
 
 ## Beskrivning
 
+En app där användare chattar med varandra. Du börjar med att ange ett användarnamn varefter du kommer in i ett "default" room. Väl därinne, kan du gå med i rum som redan finns eller skapa ett rum där andra användare kan ansluta sig till. Du som användare har även en möjlighet att skicka privata meddelanden till andra användare. Sist ut stänger dörren vilket innebär att om du är ensam användare i ett rum och lämnar så kommer rummet att tas bort. Du har i appen även möjlighet att se antalet users online.
+
 ## Tekniker och verktyg
+
+Vi har användt oss av följande ramverk och verktyg: För realtidschat användes socket.io för design och layout Material UI, React har använts för våra komponenter och typescript för utveckling
 
 ### Front End
 
-- [Lista](https://) - Lista
-- [På](https://) På
+- React, Typescript, Material UI, Vite
 
 ### Back End
 
-- [Olika](https://) - Olika
-- [Grejer](https://) - Grejer
+- Socket.io, Typescript
 
 ## Skapare
 
@@ -21,28 +25,18 @@
 ## Kodbas
 
 Den här kodbasen är indelad i en [klientmapp](./client/) och en [servermapp](./server/).
-Servern har två miljöer konfigurerade, en för utveckling och en för testning.
 
 Här är en lista på de olika skripten som kan köras i terminalen.
 
 Navigera först till server mappen -`cd server` och sedan:
 
 - `npm install` - Installerar alla NodeJS moduler (körs en gång).
-- `npm run update` - Uppdaterar testerna och behöver köras om läraren har ändrat dom.
 - `npm run dev` - Startar utvecklingsmiljön.
-- `npm test` - Startar testmiljön så du kan jobba med kravlistan.
 
-Efter detta kan du navigera tillbaka till root-mappen genom att skriva `cd ..` och sedan köra följande kommandon:
+Sedan gör du samma sak för client mappen det vill säga - `cd client`och sedan:
 
 - `npm install` - Installerar alla NodeJS moduler (körs en gång).
-- `npm run dev` - Startar utvecklingsmiljön med Vite.
-
-När du har gjort detta kan du sedan när du står i root-mappen använda följande kommandon så du slipper navigera in i mapparna:
-
-- `npm test` - Startar testen utan att du behöver navigera in i server-mappen.
-- `npm run frontend` - Startar frontend-miljön med Vite.
-- `npm run backend` - Startar backend-miljön med Nodemon.
-- `npm run all`- Startar både frontend och backend samtidigt.
+- `npm run dev` - Startar utvecklingsmiljön.
 
 **Krav för godkänt:**
 
@@ -60,8 +54,8 @@ När du har gjort detta kan du sedan när du står i root-mappen använda följa
 
 **Krav för väl godkänt:**
 
-- [ ] Alla punkter för godkänt är uppfyllda
-- [ ] Varje rum i listan skall även visa vilka användare som finns i rummet
-- [ ] Det ska gå att ha privata konversationer med enskilda användare (DM’s)
+- [x] Alla punkter för godkänt är uppfyllda
+- [x] Varje rum i listan skall även visa vilka användare som finns i rummet
+- [x] Det ska gå att ha privata konversationer med enskilda användare (DM’s)
 - [x] Historik ska sparas för skickade meddelanden och visas när en konversation öppnas (gäller både för Rum och för DM’s)
-- [ ] När sidan laddas om ska användaren behålla sitt användarnamn, läggas tillbaka i konversationen som den befann sig i (Rum eller DM) och kunna sina läsa tidigare DM’s
+- [x] När sidan laddas om ska användaren behålla sitt användarnamn, läggas tillbaka i konversationen som den befann sig i (Rum eller DM) och kunna sina läsa tidigare DM’s
