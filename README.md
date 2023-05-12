@@ -47,7 +47,7 @@ Sedan gör du samma sak för client mappen det vill säga - `cd client`och sedan
 - [x] De går att gå med i ett rum genom att klicka på det i listan
 - [x] När en användare går med i ett nytt rum ska befintligt rum lämnas automatiskt
 - [x] Användare ska kunna skicka och läsa nya meddelanden i rummet de har gått med i
-- [?] När en användare håller på att skriva ett meddelande skall det synas för alla andra i rummet
+- [x] När en användare håller på att skriva ett meddelande skall det synas för alla andra i rummet
 - [x] Git & GitHub har använts
 - [x] Projektmappen innehåller en README.md fil (läs ovan för mer info)
 - [x] Uppgiften lämnas in i tid!
