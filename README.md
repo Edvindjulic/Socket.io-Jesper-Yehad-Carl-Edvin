@@ -42,6 +42,8 @@ Sedan gör du samma sak för client mappen det vill säga - `cd client`och sedan
 
 Efter detta kan du navigera tillbaka till root-mappen genom att skriva `cd ..` och sedan köra följande kommandon:
 
+- `npm run all` för att starta båder server och client samtidigt
+
 **Krav för godkänt:**
 
 - [x] Användaren får börja med att välja ett eget visningsnamn när den besöker sidan
