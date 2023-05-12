@@ -17,6 +17,7 @@ import {
 
 import { useState } from "react";
 
+import MessageOutlinedIcon from '@mui/icons-material/MessageOutlined';
 import { useSocket } from "../context/SocketContext";
 
 function Rooms() {
@@ -50,7 +51,7 @@ function Rooms() {
   };
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column" }}>
+    <Box sx={{ display: "flex", flexDirection: "column", marginTop: "1rem" }}>
       <Typography
         variant="h6"
         sx={{ textAlign: "center", padding: "1rem", backgroundColor: "white" }}
@@ -58,7 +59,7 @@ function Rooms() {
         You are logged in as{" "}
         <span style={{ fontWeight: "bold" }}>{currentUser?.username}</span>
       </Typography>
-      <Divider sx={{ width: "100%"}} />
+      <Divider sx={{ width: "100%" }} />
       <Accordion elevation={0}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
@@ -69,35 +70,62 @@ function Rooms() {
             Rooms ({listOfRooms.length})
           </Typography>
         </AccordionSummary>
-        <AccordionDetails sx={{
-          background: "#F1F6F9"
-        }}>
-          <List sx={{
-            padding: 0,
-          }}>
-            {listOfRooms.map((room, index) => (
-              <ListItem
-                key={index}
-                button
-                onClick={() =>
-                  room === currentRoom ? leaveRoom(room) : handleRoomClick(room)
-                }
-                sx={{
-                  '&:hover': {
-                    background: "none",
-                  },
-                }}
-              >
-                <Box sx={{ display: "flex", alignItems: "center" }}>
-                  {room === currentRoom ? "🚪 " : "✅ "}
-                  <Typography variant="body1">{room}</Typography>
-                </Box>
-              </ListItem>
-            ))}
-          </List>
+        <AccordionDetails
+          sx={{
+            background: "#F1F6F9",
+          }}
+        >
+         <List sx={{ padding: 0 }}>
+  {listOfRooms.map((room, index) => (
+    <>
+      <ListItem
+        key={index}
+        button
+        onClick={() =>
+          room === currentRoom ? leaveRoom(room) : handleRoomClick(room)
+        }
+        sx={{
+          "&:hover": {
+            background: "none",
+          },
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            verticalAlign: "middle",
+          }}
+        >
+          <MessageOutlinedIcon
+            sx={{
+              padding: 0,
+              marginTop: 0,
+              marginRight: "0.2rem",
+              fontSize: "18px",
+            }}
+          />
+          <Typography
+            variant="body1"
+            sx={{
+              fontWeight: room === currentRoom ? "bold" : "normal",
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            {room}
+          </Typography>
+        </Box>
+      </ListItem>
+      {index < listOfRooms.length - 1 && <Divider />} 
+    </>
+  ))}
+</List>
+
         </AccordionDetails>
       </Accordion>
-      <Divider sx={{ width: "100%"}} />
+      <Divider sx={{ width: "100%" }} />
       <Box
         sx={{
           display: "flex",
