@@ -88,10 +88,9 @@ function SocketProvider({ children }: PropsWithChildren) {
 
   useEffect(() => {
     socket.on("session", ({ sessionID, room, userID }) => {
-      // attach the session ID to the next reconnection attempts
       socket.auth = { sessionID };
 
-      // store it in the localStorage
+      // Spara i localStorage
       sessionStorage.setItem("sessionID", sessionID);
       sessionStorage.setItem("room", room);
       sessionStorage.setItem("userID", userID);
