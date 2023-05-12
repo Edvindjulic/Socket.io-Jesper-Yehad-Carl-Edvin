@@ -4,7 +4,7 @@ The Chatting-app
 
 ## Beskrivning
 
-En app där användare chattar med varandra. Du börjar med att ange ett användarnamn varfter du kommer in i ett "default" room. Väl därinne kan du gå med i rum som redan finns eller skappa ett rum där andra användare kan ansluta sig till. Du som användare har även en möjlighet att skicka privata meddelanden till andra användare. Sist ut stänger dörren vilket innebär att om du är ensam användare och går ut som kommer rummet att stängas. Du har även möjlighet att se kan se vilka users som är inne i ett rum samt totala antalet användare i de olika rummen.
+En app där användare chattar med varandra. Du börjar med att ange ett användarnamn varefter du kommer in i ett "default" room. Väl därinne, kan du gå med i rum som redan finns eller skappa ett rum där andra användare kan ansluta sig till. Du som användare har även en möjlighet att skicka privata meddelanden till andra användare. Sist ut stänger dörren vilket innebär att om du är ensam användare i ett rum och lämnar så kommer rummet att tas bort. Du har även möjlighet att se kan se antalet users i ett rum totala antalet users som är online.
 
 ## Tekniker och verktyg
 
