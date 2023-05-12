@@ -1,8 +1,14 @@
-# Något Coolt Namn På Vår Chat
+# Namn
+
+The Chatting-app
 
 ## Beskrivning
 
+En app där användare chattar med varandra. Du börjar med att ange ett användarnamn varfter du kommer in i ett "default" room. Väl därinne kan du gå med i rum som redan finns eller skappa ett rum där andra användare kan ansluta sig till. Du som användare har även en möjlighet att skicka privata meddelanden till användare. Sist ut stänger dörren vilket innebär att om du är ensam användare och går ut som kommer rummet att stängas. Du kan även se vilka users som är inne i ett rum samt totala antalet användare.
+
 ## Tekniker och verktyg
+
+Vi har användt oss av följande ramverk: För realtidschat användes socket.io för design och layout Material UI, React har använts för våra komponenter och typescript för utveckling
 
 ### Front End
 
@@ -60,8 +66,8 @@ När du har gjort detta kan du sedan när du står i root-mappen använda följa
 
 **Krav för väl godkänt:**
 
-- [ ] Alla punkter för godkänt är uppfyllda
-- [ ] Varje rum i listan skall även visa vilka användare som finns i rummet
-- [ ] Det ska gå att ha privata konversationer med enskilda användare (DM’s)
+- [x] Alla punkter för godkänt är uppfyllda
+- [x] Varje rum i listan skall även visa vilka användare som finns i rummet
+- [x] Det ska gå att ha privata konversationer med enskilda användare (DM’s)
 - [x] Historik ska sparas för skickade meddelanden och visas när en konversation öppnas (gäller både för Rum och för DM’s)
-- [ ] När sidan laddas om ska användaren behålla sitt användarnamn, läggas tillbaka i konversationen som den befann sig i (Rum eller DM) och kunna sina läsa tidigare DM’s
+- [x] När sidan laddas om ska användaren behålla sitt användarnamn, läggas tillbaka i konversationen som den befann sig i (Rum eller DM) och kunna sina läsa tidigare DM’s

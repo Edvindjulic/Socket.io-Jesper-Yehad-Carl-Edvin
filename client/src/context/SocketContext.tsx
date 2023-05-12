@@ -90,14 +90,13 @@ function SocketProvider({ children }: PropsWithChildren) {
     socket.on("session", ({ sessionID, room, userID }) => {
       // attach the session ID to the next reconnection attempts
       socket.auth = { sessionID };
+
       // store it in the localStorage
       sessionStorage.setItem("sessionID", sessionID);
       sessionStorage.setItem("room", room);
       sessionStorage.setItem("userID", userID);
       setCurrentRoom(room);
       console.log(room);
-      // save the ID of the user
-      //ocket.userID = userID;
     });
   }, [socket]);
 

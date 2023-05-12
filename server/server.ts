@@ -108,18 +108,10 @@ io.on("connection", (socket) => {
     console.log("Received   join event from client");
     console.log("Ack function:", ack);
 
-    // if (room.startsWith("DM")) {
-    //   const [, userA, userB] = room.split("-");
-    //   if (socket.data.userID !== userA || socket.data.userID !== userB) {
-    //     return;
-    //   }
-    // }
-
     console.log("Before", socket.data.room);
     socket.data.room = room;
     sessionStore.saveSession(socket.data.sessionID!, socket.data as SocketData); // Add this line
 
-    // socket.leave();
     socket.join(room);
 
     console.log("Socket data after set", socket.data.room);
@@ -151,7 +143,6 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     console.log(`${username} has disconnected from the server`);
-    // io.emit("leave", `${username} has disconnected from the server`);
 
     const users: SocketData[] = [];
     io.emit("users", users);
@@ -187,7 +178,6 @@ io.on("connection", (socket) => {
     }
 
     io.emit("users", users);
-    // io.to(room).emit("userLeft", `${username} has left the room ${room}`);
   });
 
   socket.on("typing", (room: string, isTyping: boolean) => {
@@ -201,14 +191,9 @@ function getRooms() {
   const roomsFound: string[] = []; // Room[]
 
   for (const [name, setOfSocketIds] of rooms) {
-    // An actual real room that we created
     if (!setOfSocketIds.has(name)) {
       if (name.startsWith("DM")) continue;
       roomsFound.push(name);
-      // roomsFound.push({
-      // name,
-      // users: io.sockets.sockets.find,
-      // });
     }
   }
   return roomsFound;
