@@ -74,8 +74,7 @@ io.on("connection", (socket) => {
   socket.emit("session", socket.data as SocketData);
 
   console.log(`${username} has connected to the server`);
-  /* console.log(socket.data);
-  console.log(sessionStore.findAllSessions()); */
+
   if (socket.data.room && socket.data.room !== "Default") {
     socket.join(socket.data.room);
     console.log("I rejoin the", socket.data.room);
