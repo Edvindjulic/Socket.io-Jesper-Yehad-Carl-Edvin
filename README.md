@@ -12,13 +12,11 @@ Vi har användt oss av följande ramverk: För realtidschat användes socket.io 
 
 ### Front End
 
-- [Lista](https://) - Lista
-- [På](https://) På
+- React, Typescript, Material UI, Vite
 
 ### Back End
 
-- [Olika](https://) - Olika
-- [Grejer](https://) - Grejer
+- Socket.io, Typescript
 
 ## Skapare
 
@@ -27,7 +25,6 @@ Vi har användt oss av följande ramverk: För realtidschat användes socket.io 
 ## Kodbas
 
 Den här kodbasen är indelad i en [klientmapp](./client/) och en [servermapp](./server/).
-Servern har två miljöer konfigurerade, en för utveckling och en för testning.
 
 Här är en lista på de olika skripten som kan köras i terminalen.
 
@@ -36,19 +33,14 @@ Navigera först till server mappen -`cd server` och sedan:
 - `npm install` - Installerar alla NodeJS moduler (körs en gång).
 - `npm run update` - Uppdaterar testerna och behöver köras om läraren har ändrat dom.
 - `npm run dev` - Startar utvecklingsmiljön.
-- `npm test` - Startar testmiljön så du kan jobba med kravlistan.
 
-Efter detta kan du navigera tillbaka till root-mappen genom att skriva `cd ..` och sedan köra följande kommandon:
+Sedan gör du samma sak för client mappen det vill säga - `cd client`och sedan:
 
 - `npm install` - Installerar alla NodeJS moduler (körs en gång).
-- `npm run dev` - Startar utvecklingsmiljön med Vite.
+- `npm run update` - Uppdaterar testerna och behöver köras om läraren har ändrat dom.
+- `npm run dev` - Startar utvecklingsmiljön.
 
-När du har gjort detta kan du sedan när du står i root-mappen använda följande kommandon så du slipper navigera in i mapparna:
-
-- `npm test` - Startar testen utan att du behöver navigera in i server-mappen.
-- `npm run frontend` - Startar frontend-miljön med Vite.
-- `npm run backend` - Startar backend-miljön med Nodemon.
-- `npm run all`- Startar både frontend och backend samtidigt.
+Efter detta kan du navigera tillbaka till root-mappen genom att skriva `cd ..` och sedan köra följande kommandon:
 
 **Krav för godkänt:**
 
