@@ -4,11 +4,11 @@ The Chatting-app
 
 ## Beskrivning
 
-En app där användare chattar med varandra. Du börjar med att ange ett användarnamn varfter du kommer in i ett "default" room. Väl därinne kan du gå med i rum som redan finns eller skappa ett rum där andra användare kan ansluta sig till. Du som användare har även en möjlighet att skicka privata meddelanden till användare. Sist ut stänger dörren vilket innebär att om du är ensam användare och går ut som kommer rummet att stängas. Du kan även se vilka users som är inne i ett rum samt totala antalet användare.
+En app där användare chattar med varandra. Du börjar med att ange ett användarnamn varfter du kommer in i ett "default" room. Väl därinne kan du gå med i rum som redan finns eller skappa ett rum där andra användare kan ansluta sig till. Du som användare har även en möjlighet att skicka privata meddelanden till andra användare. Sist ut stänger dörren vilket innebär att om du är ensam användare och går ut som kommer rummet att stängas. Du har även möjlighet att se kan se vilka users som är inne i ett rum samt totala antalet användare i de olika rummen.
 
 ## Tekniker och verktyg
 
-Vi har användt oss av följande ramverk: För realtidschat användes socket.io för design och layout Material UI, React har använts för våra komponenter och typescript för utveckling
+Vi har användt oss av följande ramverk och verktyg: För realtidschat användes socket.io för design och layout Material UI, React har använts för våra komponenter och typescript för utveckling
 
 ### Front End
 
@@ -31,18 +31,12 @@ Här är en lista på de olika skripten som kan köras i terminalen.
 Navigera först till server mappen -`cd server` och sedan:
 
 - `npm install` - Installerar alla NodeJS moduler (körs en gång).
-- `npm run update` - Uppdaterar testerna och behöver köras om läraren har ändrat dom.
 - `npm run dev` - Startar utvecklingsmiljön.
 
 Sedan gör du samma sak för client mappen det vill säga - `cd client`och sedan:
 
 - `npm install` - Installerar alla NodeJS moduler (körs en gång).
-- `npm run update` - Uppdaterar testerna och behöver köras om läraren har ändrat dom.
 - `npm run dev` - Startar utvecklingsmiljön.
-
-Efter detta kan du navigera tillbaka till root-mappen genom att skriva `cd ..` och sedan köra följande kommandon:
-
-- `npm run all` för att starta båder server och client samtidigt
 
 **Krav för godkänt:**
 
